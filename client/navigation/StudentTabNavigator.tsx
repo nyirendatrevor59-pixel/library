@@ -3,24 +3,33 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet } from "react-native";
-import HomeStackNavigator from "@/navigation/HomeStackNavigator";
-import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
-import { useTheme } from "@/hooks/useTheme";
 
-export type MainTabParamList = {
+import StudentHomeScreen from "@/screens/student/StudentHomeScreen";
+import ClassroomScreen from "@/screens/student/ClassroomScreen";
+import DocumentsScreen from "@/screens/student/DocumentsScreen";
+import StudentProfileScreen from "@/screens/student/StudentProfileScreen";
+import { HeaderTitle } from "@/components/HeaderTitle";
+import { useTheme } from "@/hooks/useTheme";
+import { useScreenOptions } from "@/hooks/useScreenOptions";
+
+export type StudentTabParamList = {
   HomeTab: undefined;
+  ClassroomTab: undefined;
+  DocumentsTab: undefined;
   ProfileTab: undefined;
 };
 
-const Tab = createBottomTabNavigator<MainTabParamList>();
+const Tab = createBottomTabNavigator<StudentTabParamList>();
 
-export default function MainTabNavigator() {
+export default function StudentTabNavigator() {
   const { theme, isDark } = useTheme();
+  const screenOptions = useScreenOptions();
 
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       screenOptions={{
+        ...screenOptions,
         tabBarActiveTintColor: theme.tabIconSelected,
         tabBarInactiveTintColor: theme.tabIconDefault,
         tabBarStyle: {
@@ -40,24 +49,47 @@ export default function MainTabNavigator() {
               style={StyleSheet.absoluteFill}
             />
           ) : null,
-        headerShown: false,
       }}
     >
       <Tab.Screen
         name="HomeTab"
-        component={HomeStackNavigator}
+        component={StudentHomeScreen}
         options={{
           title: "Home",
+          headerTitle: () => <HeaderTitle title="StudyHub" />,
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
+        name="ClassroomTab"
+        component={ClassroomScreen}
+        options={{
+          title: "Classroom",
+          headerTitle: "Live Classroom",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="video" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="DocumentsTab"
+        component={DocumentsScreen}
+        options={{
+          title: "Documents",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="folder" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="ProfileTab"
-        component={ProfileStackNavigator}
+        component={StudentProfileScreen}
         options={{
           title: "Profile",
+          headerTitle: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />
           ),

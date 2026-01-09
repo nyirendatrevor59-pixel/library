@@ -3,7 +3,7 @@
   "main": "client/index.js",
   "version": "1.0.0",
   "scripts": {
-    "start": "cd dist && go run main.go",
+    "start": "npm run server:prod",
     "expo:dev": "npx expo start --localhost --port 8083",
     "server:dev": "NODE_ENV=development tsx server/index.ts",
     "all:dev": "npm run expo:dev & npm run server:dev",

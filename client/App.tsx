@@ -12,23 +12,36 @@ import { queryClient } from "@/lib/query-client";
 import RootStackNavigator from "@/navigation/RootStackNavigator";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LiveProvider } from "@/contexts/LiveContext";
+import { AdminProvider } from "@/contexts/AdminContext";
+import { TutorProvider } from "@/contexts/TutorContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { navigationRef } from "@/lib/navigation";
 
 export default function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <SafeAreaProvider>
+        <LiveProvider>
+          <AuthProvider>
+            <SubscriptionProvider>
+              <AdminProvider>
+                <TutorProvider>
+                  <SafeAreaProvider>
             <GestureHandlerRootView style={styles.root}>
               <KeyboardProvider>
-                <NavigationContainer>
+                <NavigationContainer ref={navigationRef}>
                   <RootStackNavigator />
                 </NavigationContainer>
                 <StatusBar style="auto" />
               </KeyboardProvider>
             </GestureHandlerRootView>
-          </SafeAreaProvider>
-        </AuthProvider>
+              </SafeAreaProvider>
+                </TutorProvider>
+              </AdminProvider>
+            </SubscriptionProvider>
+          </AuthProvider>
+        </LiveProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

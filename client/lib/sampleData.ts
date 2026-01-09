@@ -7,7 +7,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "CS101",
     category: "Computer Science",
     description: "Fundamentals of programming and algorithms",
+    lecturerId: null,
     lecturerName: "Dr. Sarah Johnson",
+    createdAt: null,
   },
   {
     id: "2",
@@ -15,7 +17,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "CS201",
     category: "Computer Science",
     description: "Advanced data structures and algorithm design",
+    lecturerId: null,
     lecturerName: "Prof. Michael Chen",
+    createdAt: null,
   },
   {
     id: "3",
@@ -23,7 +27,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "MATH101",
     category: "Mathematics",
     description: "Differential and integral calculus",
+    lecturerId: null,
     lecturerName: "Dr. Emily Watson",
+    createdAt: null,
   },
   {
     id: "4",
@@ -31,7 +37,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "MATH201",
     category: "Mathematics",
     description: "Vector spaces and linear transformations",
+    lecturerId: null,
     lecturerName: "Prof. David Lee",
+    createdAt: null,
   },
   {
     id: "5",
@@ -39,7 +47,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "PHY101",
     category: "Physics",
     description: "Classical mechanics and thermodynamics",
+    lecturerId: null,
     lecturerName: "Dr. Robert Miller",
+    createdAt: null,
   },
   {
     id: "6",
@@ -47,7 +57,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "CHEM201",
     category: "Chemistry",
     description: "Structure and reactions of organic compounds",
+    lecturerId: null,
     lecturerName: "Dr. Lisa Anderson",
+    createdAt: null,
   },
   {
     id: "7",
@@ -55,7 +67,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "BUS101",
     category: "Business",
     description: "Principles of business and management",
+    lecturerId: null,
     lecturerName: "Prof. James Wilson",
+    createdAt: null,
   },
   {
     id: "8",
@@ -63,7 +77,9 @@ export const AVAILABLE_COURSES: Course[] = [
     code: "ENG201",
     category: "Literature",
     description: "Classic and modern English literature",
+    lecturerId: null,
     lecturerName: "Dr. Amanda Brown",
+    createdAt: null,
   },
 ];
 

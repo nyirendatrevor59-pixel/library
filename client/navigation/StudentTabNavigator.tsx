@@ -8,13 +8,14 @@ import StudentHomeScreen from "@/screens/student/StudentHomeScreen";
 import ClassroomScreen from "@/screens/student/ClassroomScreen";
 import DocumentsScreen from "@/screens/student/DocumentsScreen";
 import StudentProfileScreen from "@/screens/student/StudentProfileScreen";
+import StudentRequestsScreen from "@/screens/student/StudentRequestsScreen";
 import { HeaderTitle } from "@/components/HeaderTitle";
 import { useTheme } from "@/hooks/useTheme";
-import { useScreenOptions } from "@/hooks/useScreenOptions";
 
 export type StudentTabParamList = {
   HomeTab: undefined;
   ClassroomTab: undefined;
+  RequestsTab: undefined;
   DocumentsTab: undefined;
   ProfileTab: undefined;
 };
@@ -23,13 +24,11 @@ const Tab = createBottomTabNavigator<StudentTabParamList>();
 
 export default function StudentTabNavigator() {
   const { theme, isDark } = useTheme();
-  const screenOptions = useScreenOptions();
 
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       screenOptions={{
-        ...screenOptions,
         tabBarActiveTintColor: theme.tabIconSelected,
         tabBarInactiveTintColor: theme.tabIconDefault,
         tabBarStyle: {
@@ -74,6 +73,17 @@ export default function StudentTabNavigator() {
         }}
       />
       <Tab.Screen
+        name="RequestsTab"
+        component={StudentRequestsScreen}
+        options={{
+          title: "Requests",
+          headerTitle: "My Requests",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="message-circle" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="DocumentsTab"
         component={DocumentsScreen}
         options={{
@@ -84,6 +94,7 @@ export default function StudentTabNavigator() {
           ),
         }}
       />
+
       <Tab.Screen
         name="ProfileTab"
         component={StudentProfileScreen}

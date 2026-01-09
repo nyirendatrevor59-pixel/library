@@ -1,0 +1,102 @@
+[
+  {
+    "id": "mat-1766141805616",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "2021 G9 Math P1 Internal",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/47efd7ac-f624-4cd0-b57b-3f89ed37568a",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T10:56:45.616Z"
+  },
+  {
+    "id": "mat-1766141807064",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "2021 G9 Math P1 Internal",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/47efd7ac-f624-4cd0-b57b-3f89ed37568a",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T10:56:47.064Z"
+  },
+  {
+    "id": "mat-1766141851757",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "grz",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/ced05ea4-c19f-4ce8-befb-8059883ec5fb",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T10:57:31.757Z"
+  },
+  {
+    "id": "mat-1766141854960",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "grz",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/ced05ea4-c19f-4ce8-befb-8059883ec5fb",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T10:57:34.960Z"
+  },
+  {
+    "id": "mat-1766142734802",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:12:14.802Z"
+  },
+  {
+    "id": "mat-1766142886325",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:14:46.325Z"
+  },
+  {
+    "id": "mat-1766142894359",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file 1",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:14:54.359Z"
+  },
+  {
+    "id": "mat-1766143218571",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file 1",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:20:18.571Z"
+  },
+  {
+    "id": "mat-1766143463370",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file 2",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:24:23.370Z"
+  },
+  {
+    "id": "mat-1766143564422",
+    "lecturerId": "lecturer-1",
+    "courseId": "1",
+    "title": "file 2",
+    "description": "",
+    "fileUrl": "blob:http://localhost:8083/a54d74d2-9216-42b2-8fd3-eb8a4f9cb6ab",
+    "fileType": "pdf",
+    "createdAt": "2025-12-19T11:26:04.422Z"
+  }
+]

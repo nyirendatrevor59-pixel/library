@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "studyhub",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.studyhub.app"
@@ -38,10 +37,8 @@
           }
         }
       ],
-      "expo-web-browser"
-    ],
-    "experiments": {
-      "reactCompiler": true
-    }
+      "expo-web-browser",
+      "expo-font"
+    ]
   }
 }

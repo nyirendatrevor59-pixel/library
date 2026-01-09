@@ -14,23 +14,34 @@ import { Spacing, BorderRadius, AppColors } from "@/constants/theme";
 import { AVAILABLE_COURSES } from "@/lib/sampleData";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 
-const CATEGORIES = ["All", "Computer Science", "Mathematics", "Physics", "Chemistry", "Business", "Literature"];
+const CATEGORIES = [
+  "All",
+  "Computer Science",
+  "Mathematics",
+  "Physics",
+  "Chemistry",
+  "Business",
+  "Literature",
+];
 
 export default function CourseSelectionScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const { theme } = useTheme();
   const { selectCourses } = useAuth();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([]);
 
   const filteredCourses = AVAILABLE_COURSES.filter((course) => {
-    const matchesSearch = course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.code.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || course.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === "All" || course.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -38,7 +49,7 @@ export default function CourseSelectionScreen() {
     setSelectedCourseIds((prev) =>
       prev.includes(courseId)
         ? prev.filter((id) => id !== courseId)
-        : [...prev, courseId]
+        : [...prev, courseId],
     );
   };
 
@@ -50,7 +61,11 @@ export default function CourseSelectionScreen() {
     });
   };
 
-  const renderCourseItem = ({ item }: { item: typeof AVAILABLE_COURSES[0] }) => {
+  const renderCourseItem = ({
+    item,
+  }: {
+    item: (typeof AVAILABLE_COURSES)[0];
+  }) => {
     const isSelected = selectedCourseIds.includes(item.id);
     return (
       <Pressable
@@ -63,22 +78,34 @@ export default function CourseSelectionScreen() {
       >
         <View style={styles.courseInfo}>
           <View style={styles.courseHeader}>
-            <View style={[styles.courseCodeBadge, { backgroundColor: AppColors.primary + "20" }]}>
-              <ThemedText type="caption" style={{ color: AppColors.primary, fontWeight: "600" }}>
+            <View
+              style={[
+                styles.courseCodeBadge,
+                { backgroundColor: AppColors.primary + "20" },
+              ]}
+            >
+              <ThemedText
+                type="small"
+                style={{ color: AppColors.primary, fontWeight: "600" }}
+              >
                 {item.code}
               </ThemedText>
             </View>
           </View>
-          <ThemedText type="h4" style={styles.courseName}>{item.name}</ThemedText>
+          <ThemedText type="h4" style={styles.courseName}>
+            {item.name}
+          </ThemedText>
           <ThemedText type="small" style={{ color: theme.textSecondary }}>
             {item.lecturerName}
           </ThemedText>
         </View>
-        <View style={[
-          styles.checkbox,
-          { borderColor: isSelected ? AppColors.primary : theme.border },
-          isSelected && { backgroundColor: AppColors.primary },
-        ]}>
+        <View
+          style={[
+            styles.checkbox,
+            { borderColor: isSelected ? AppColors.primary : theme.border },
+            isSelected && { backgroundColor: AppColors.primary },
+          ]}
+        >
           {isSelected ? <Feather name="check" size={16} color="#FFF" /> : null}
         </View>
       </Pressable>
@@ -87,8 +114,18 @@ export default function CourseSelectionScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
-      <View style={[styles.searchContainer, { paddingTop: headerHeight + Spacing.lg }]}>
-        <View style={[styles.searchBar, { backgroundColor: theme.backgroundDefault }]}>
+      <View
+        style={[
+          styles.searchContainer,
+          { paddingTop: headerHeight + Spacing.lg },
+        ]}
+      >
+        <View
+          style={[
+            styles.searchBar,
+            { backgroundColor: theme.backgroundDefault },
+          ]}
+        >
           <Feather name="search" size={20} color={theme.textSecondary} />
           <TextInput
             style={[styles.searchInput, { color: theme.text }]}
@@ -98,7 +135,7 @@ export default function CourseSelectionScreen() {
             onChangeText={setSearchQuery}
           />
         </View>
-        
+
         <FlatList
           horizontal
           data={CATEGORIES}
@@ -109,13 +146,20 @@ export default function CourseSelectionScreen() {
             <Pressable
               style={[
                 styles.categoryChip,
-                { backgroundColor: selectedCategory === item ? AppColors.primary : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    selectedCategory === item
+                      ? AppColors.primary
+                      : theme.backgroundDefault,
+                },
               ]}
               onPress={() => setSelectedCategory(item)}
             >
               <ThemedText
                 type="small"
-                style={{ color: selectedCategory === item ? "#FFF" : theme.text }}
+                style={{
+                  color: selectedCategory === item ? "#FFF" : theme.text,
+                }}
               >
                 {item}
               </ThemedText>
@@ -135,16 +179,28 @@ export default function CourseSelectionScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Feather name="book-open" size={48} color={theme.textSecondary} />
-            <ThemedText type="body" style={{ color: theme.textSecondary, marginTop: Spacing.md }}>
+            <ThemedText
+              type="body"
+              style={{ color: theme.textSecondary, marginTop: Spacing.md }}
+            >
               No courses found
             </ThemedText>
           </View>
         }
       />
 
-      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + Spacing.lg, backgroundColor: theme.backgroundRoot }]}>
+      <View
+        style={[
+          styles.bottomBar,
+          {
+            paddingBottom: insets.bottom + Spacing.lg,
+            backgroundColor: theme.backgroundRoot,
+          },
+        ]}
+      >
         <ThemedText type="small" style={{ color: theme.textSecondary }}>
-          {selectedCourseIds.length} course{selectedCourseIds.length !== 1 ? "s" : ""} selected
+          {selectedCourseIds.length} course
+          {selectedCourseIds.length !== 1 ? "s" : ""} selected
         </ThemedText>
         <Button
           onPress={handleContinue}

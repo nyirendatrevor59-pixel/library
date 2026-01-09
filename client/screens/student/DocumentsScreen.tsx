@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, FlatList, Pressable, TextInput } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, FlatList, Pressable, TextInput, RefreshControl, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -10,73 +10,184 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/contexts/AuthContext";
 import { Spacing, BorderRadius, AppColors } from "@/constants/theme";
 import { SAMPLE_NOTES } from "@/lib/sampleData";
 import { Note } from "@/lib/storage";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { API_BASE_URL } from "@/lib/api";
 
 const FILE_TYPE_ICONS: Record<string, { icon: string; color: string }> = {
   pdf: { icon: "file-text", color: AppColors.error },
   doc: { icon: "file", color: AppColors.primary },
   docx: { icon: "file", color: AppColors.primary },
+  link: { icon: "link", color: AppColors.success },
 };
 
 const FILTER_OPTIONS = ["All", "PDF", "Word"];
+const TAB_OPTIONS = ["Shared Documents", "Lecturer Materials"];
 
 export default function DocumentsScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  
+  const { user } = useAuth();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("Shared Documents");
+  const [lecturerMaterials, setLecturerMaterials] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const filteredNotes = SAMPLE_NOTES.filter((note) => {
-    const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    if (selectedTab === "Lecturer Materials") {
+      console.log('Fetching lecturer materials for user:', {
+        userId: user?.id,
+        selectedCourses: user?.selectedCourses,
+        role: user?.role
+      });
+      fetchLecturerMaterials();
+    }
+  }, [selectedTab, user?.selectedCourses]);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/courses`);
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      console.error("Failed to fetch courses:", error);
+    }
+  };
+
+  const fetchLecturerMaterials = async () => {
+    try {
+      const courseIds = user?.selectedCourses?.join(',') || '';
+      const url = courseIds
+        ? `${API_BASE_URL}/api/materials?courseIds=${courseIds}`
+        : `${API_BASE_URL}/api/materials`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      setLecturerMaterials(data);
+    } catch (error) {
+      console.error("Failed to fetch materials:", error);
+      setLecturerMaterials([]); // Ensure we have an empty array on error
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchLecturerMaterials();
+    setRefreshing(false);
+  };
+
+  const currentData = selectedTab === "Shared Documents" ? SAMPLE_NOTES : lecturerMaterials.map(m => {
+    const course = courses.find(c => c.id === m.courseId);
+    return {
+      id: m.id,
+      title: m.title || "Untitled",
+      courseName: course ? course.name : "Course " + (m.courseId || "Unknown"),
+      fileType: m.fileType || "pdf",
+      size: m.size || "N/A",
+      uploadedAt: m.createdAt ? new Date(m.createdAt * 1000).toLocaleDateString() : "N/A",
+    };
+  });
+
+  const filteredNotes = currentData.filter((note) => {
+    const matchesSearch =
+      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       note.courseName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilter === "All" ||
+    const matchesFilter =
+      selectedFilter === "All" ||
       (selectedFilter === "PDF" && note.fileType === "pdf") ||
-      (selectedFilter === "Word" && (note.fileType === "doc" || note.fileType === "docx"));
+      (selectedFilter === "Word" &&
+        (note.fileType === "doc" || note.fileType === "docx"));
     return matchesSearch && matchesFilter;
   });
 
-  const groupedNotes = filteredNotes.reduce((acc, note) => {
-    if (!acc[note.courseName]) {
-      acc[note.courseName] = [];
-    }
-    acc[note.courseName].push(note);
-    return acc;
-  }, {} as Record<string, Note[]>);
+  const groupedNotes = filteredNotes.reduce(
+    (acc, note) => {
+      try {
+        const courseName = note.courseName || "Unknown Course";
+        if (!acc[courseName]) {
+          acc[courseName] = [];
+        }
+        acc[courseName].push(note);
+      } catch (error) {
+        console.error("Error grouping note:", note, error);
+      }
+      return acc;
+    },
+    {} as Record<string, any[]>,
+  );
+
+  console.log('DocumentsScreen render data:', {
+    selectedTab,
+    lecturerMaterialsCount: lecturerMaterials.length,
+    currentDataCount: currentData.length,
+    filteredNotesCount: filteredNotes.length,
+    groupedNotesKeys: Object.keys(groupedNotes),
+    sampleGroupedNote: Object.entries(groupedNotes)[0]?.[1]?.[0]
+  });
 
   const handleOpenDocument = (note: Note) => {
-    navigation.navigate("DocumentViewer", { documentId: note.id, title: note.title });
+    console.log('Opening document:', note);
+    Alert.alert('Debug', `Opening document: ${note.title} (ID: ${note.id})`);
+    navigation.navigate("DocumentViewer", {
+      documentId: note.id,
+      title: note.title,
+    });
   };
 
   const renderNoteItem = (note: Note) => {
-    const fileConfig = FILE_TYPE_ICONS[note.fileType] || { icon: "file", color: theme.textSecondary };
-    
+    const fileConfig = FILE_TYPE_ICONS[note.fileType] || {
+      icon: "file",
+      color: theme.textSecondary,
+    };
+
     return (
       <Pressable
         key={note.id}
         style={[styles.noteItem, { backgroundColor: theme.backgroundDefault }]}
         onPress={() => handleOpenDocument(note)}
       >
-        <View style={[styles.fileIcon, { backgroundColor: fileConfig.color + "20" }]}>
-          <Feather name={fileConfig.icon as any} size={20} color={fileConfig.color} />
+        <View
+          style={[
+            styles.fileIcon,
+            { backgroundColor: fileConfig.color + "20" },
+          ]}
+        >
+          <Feather
+            name={fileConfig.icon as any}
+            size={20}
+            color={fileConfig.color}
+          />
         </View>
         <View style={styles.noteInfo}>
-          <ThemedText type="body" style={{ fontWeight: "500" }} numberOfLines={1}>
+          <ThemedText
+            type="body"
+            style={{ fontWeight: "500" }}
+            numberOfLines={1}
+          >
             {note.title}
           </ThemedText>
           <View style={styles.noteMetadata}>
-            <ThemedText type="caption" style={{ color: theme.textSecondary }}>
+            <ThemedText type="small" style={{ color: theme.textSecondary }}>
               {note.size}
             </ThemedText>
             <View style={styles.dot} />
-            <ThemedText type="caption" style={{ color: theme.textSecondary }}>
+            <ThemedText type="small" style={{ color: theme.textSecondary }}>
               {note.uploadedAt}
             </ThemedText>
           </View>
@@ -90,7 +201,12 @@ export default function DocumentsScreen() {
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
       <View style={[styles.header, { paddingTop: headerHeight + Spacing.lg }]}>
         {showSearch ? (
-          <View style={[styles.searchBar, { backgroundColor: theme.backgroundDefault }]}>
+          <View
+            style={[
+              styles.searchBar,
+              { backgroundColor: theme.backgroundDefault },
+            ]}
+          >
             <Feather name="search" size={20} color={theme.textSecondary} />
             <TextInput
               style={[styles.searchInput, { color: theme.text }]}
@@ -100,7 +216,12 @@ export default function DocumentsScreen() {
               onChangeText={setSearchQuery}
               autoFocus
             />
-            <Pressable onPress={() => { setShowSearch(false); setSearchQuery(""); }}>
+            <Pressable
+              onPress={() => {
+                setShowSearch(false);
+                setSearchQuery("");
+              }}
+            >
               <Feather name="x" size={20} color={theme.textSecondary} />
             </Pressable>
           </View>
@@ -113,6 +234,37 @@ export default function DocumentsScreen() {
           </View>
         )}
 
+
+
+        <FlatList
+          horizontal
+          data={TAB_OPTIONS}
+          keyExtractor={(item) => item}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterList}
+          renderItem={({ item }) => (
+            <Pressable
+              style={[
+                styles.filterChip,
+                {
+                  backgroundColor:
+                    selectedTab === item
+                      ? AppColors.primary
+                      : theme.backgroundDefault,
+                },
+              ]}
+              onPress={() => setSelectedTab(item)}
+            >
+              <ThemedText
+                type="small"
+                style={{ color: selectedTab === item ? "#FFF" : theme.text }}
+              >
+                {item}
+              </ThemedText>
+            </Pressable>
+          )}
+        />
+
         <FlatList
           horizontal
           data={FILTER_OPTIONS}
@@ -123,7 +275,12 @@ export default function DocumentsScreen() {
             <Pressable
               style={[
                 styles.filterChip,
-                { backgroundColor: selectedFilter === item ? AppColors.primary : theme.backgroundDefault },
+                {
+                  backgroundColor:
+                    selectedFilter === item
+                      ? AppColors.primary
+                      : theme.backgroundDefault,
+                },
               ]}
               onPress={() => setSelectedFilter(item)}
             >
@@ -138,6 +295,8 @@ export default function DocumentsScreen() {
         />
       </View>
 
+
+
       <FlatList
         data={Object.entries(groupedNotes)}
         keyExtractor={([courseName]) => courseName}
@@ -146,22 +305,39 @@ export default function DocumentsScreen() {
           { paddingBottom: tabBarHeight + Spacing.xl },
         ]}
         scrollIndicatorInsets={{ bottom: insets.bottom }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item: [courseName, notes] }) => (
           <View style={styles.courseSection}>
-            <ThemedText type="h4" style={styles.courseName}>{courseName}</ThemedText>
-            <View style={styles.notesList}>
-              {notes.map(renderNoteItem)}
-            </View>
+            <ThemedText type="h4" style={styles.courseName}>
+              {courseName}
+            </ThemedText>
+            <View style={styles.notesList}>{(notes as Note[]).map(renderNoteItem)}</View>
           </View>
         )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Feather name="folder" size={48} color={theme.textSecondary} />
-            <ThemedText type="h4" style={{ color: theme.textSecondary, marginTop: Spacing.md }}>
+            <ThemedText
+              type="h4"
+              style={{ color: theme.textSecondary, marginTop: Spacing.md }}
+            >
               No Documents Found
             </ThemedText>
-            <ThemedText type="body" style={{ color: theme.textSecondary, textAlign: "center", marginTop: Spacing.sm }}>
-              {searchQuery ? "Try a different search term" : "Your course documents will appear here"}
+            <ThemedText
+              type="body"
+              style={{
+                color: theme.textSecondary,
+                textAlign: "center",
+                marginTop: Spacing.sm,
+              }}
+            >
+              {searchQuery
+                ? "Try a different search term"
+                : selectedTab === "Lecturer Materials"
+                ? "No lecturer materials available yet"
+                : "Your course documents will appear here"}
             </ThemedText>
           </View>
         }

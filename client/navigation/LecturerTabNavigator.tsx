@@ -10,7 +10,6 @@ import LecturerClassroomScreen from "@/screens/lecturer/LecturerClassroomScreen"
 import LecturerProfileScreen from "@/screens/lecturer/LecturerProfileScreen";
 import { HeaderTitle } from "@/components/HeaderTitle";
 import { useTheme } from "@/hooks/useTheme";
-import { useScreenOptions } from "@/hooks/useScreenOptions";
 
 export type LecturerTabParamList = {
   DashboardTab: undefined;
@@ -23,13 +22,11 @@ const Tab = createBottomTabNavigator<LecturerTabParamList>();
 
 export default function LecturerTabNavigator() {
   const { theme, isDark } = useTheme();
-  const screenOptions = useScreenOptions();
 
   return (
     <Tab.Navigator
       initialRouteName="DashboardTab"
       screenOptions={{
-        ...screenOptions,
         tabBarActiveTintColor: theme.tabIconSelected,
         tabBarInactiveTintColor: theme.tabIconDefault,
         tabBarStyle: {

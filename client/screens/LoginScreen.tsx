@@ -1,15 +1,26 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TextInput, Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Button } from "@/components/Button";
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdmin } from "@/contexts/AdminContext";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, AppColors } from "@/constants/theme";
+import { RootStackParamList } from "@/navigation/RootStackNavigator";
 
 type Role = "student" | "lecturer";
 
@@ -17,7 +28,9 @@ export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const { login } = useAuth();
-  
+  const { trackAnalytics } = useAdmin();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<Role>("student");
@@ -29,6 +42,8 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       await login(email, password, selectedRole);
+      // Track successful login
+      trackAnalytics('user_logins');
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -37,12 +52,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={[AppColors.primary, AppColors.secondary]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
-    >
+    <View style={[styles.gradient, { backgroundColor: AppColors.primary }]}>
       <KeyboardAwareScrollViewCompat
         style={styles.container}
         contentContainerStyle={[
@@ -56,27 +66,37 @@ export default function LoginScreen() {
             style={styles.logo}
             resizeMode="contain"
           />
-          <ThemedText type="h1" style={styles.appName}>StudyHub</ThemedText>
+          <ThemedText type="h1" style={styles.appName}>
+            StudyHub
+          </ThemedText>
           <ThemedText type="body" style={styles.tagline}>
             Your Learning Companion
           </ThemedText>
         </View>
 
-        <View style={[styles.formCard, { backgroundColor: theme.backgroundRoot }]}>
-          <ThemedText type="h3" style={styles.formTitle}>Welcome Back</ThemedText>
-          
+        <View
+          style={[styles.formCard, { backgroundColor: theme.backgroundRoot }]}
+        >
+          <ThemedText type="h3" style={styles.formTitle}>
+            Welcome Back
+          </ThemedText>
+
           <View style={styles.roleSelector}>
             <Pressable
               style={[
                 styles.roleButton,
-                selectedRole === "student" && { backgroundColor: AppColors.primary },
+                selectedRole === "student" && {
+                  backgroundColor: AppColors.primary,
+                },
               ]}
               onPress={() => setSelectedRole("student")}
             >
               <Feather
                 name="user"
                 size={20}
-                color={selectedRole === "student" ? "#FFF" : theme.textSecondary}
+                color={
+                  selectedRole === "student" ? "#FFF" : theme.textSecondary
+                }
               />
               <ThemedText
                 type="small"
@@ -91,14 +111,18 @@ export default function LoginScreen() {
             <Pressable
               style={[
                 styles.roleButton,
-                selectedRole === "lecturer" && { backgroundColor: AppColors.primary },
+                selectedRole === "lecturer" && {
+                  backgroundColor: AppColors.primary,
+                },
               ]}
               onPress={() => setSelectedRole("lecturer")}
             >
               <Feather
                 name="briefcase"
                 size={20}
-                color={selectedRole === "lecturer" ? "#FFF" : theme.textSecondary}
+                color={
+                  selectedRole === "lecturer" ? "#FFF" : theme.textSecondary
+                }
               />
               <ThemedText
                 type="small"
@@ -146,24 +170,25 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          <Button onPress={handleLogin} disabled={isLoading || !email || !password}>
-            {isLoading ? (
-              <ActivityIndicator color="#FFF" />
-            ) : (
-              "Sign In"
-            )}
+          <Button
+            onPress={handleLogin}
+            disabled={isLoading || !email || !password}
+          >
+            {isLoading ? <ActivityIndicator color="#FFF" /> : "Sign In"}
           </Button>
 
-          <ThemedText type="small" style={styles.signupText}>
-            New to StudyHub? Contact your institution
-          </ThemedText>
+          <Pressable onPress={() => navigation.navigate('Register')}>
+            <ThemedText type="small" style={styles.signupText}>
+              New to StudyHub? Create an account
+            </ThemedText>
+          </Pressable>
         </View>
 
-        <ThemedText type="caption" style={styles.footerText}>
+        <ThemedText type="small" style={styles.footerText}>
           By signing in, you agree to our Terms of Service and Privacy Policy
         </ThemedText>
       </KeyboardAwareScrollViewCompat>
-    </LinearGradient>
+    </View>
   );
 }
 

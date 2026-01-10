@@ -1,6 +1,6 @@
 {
   "name": "my-app",
-  "main": "client/index.js",
+  "main": "server_dist/index.js",
   "version": "1.0.0",
   "scripts": {
     "start": "npm run server:prod",

@@ -457,7 +457,7 @@ export default function TutorRequestsScreen() {
     if (selectedRequest.response && !chatMessages.some(m => m.message === selectedRequest.response)) {
       messages.push({
         id: 'response',
-        userId: user?.id || 'tutor',
+        userId: user?.id ?? 'tutor',
         name: 'Tutor',
         message: selectedRequest.response,
         timestamp: selectedRequest.createdAt ? new Date(selectedRequest.createdAt * 1000).toISOString() : new Date().toISOString()
@@ -466,7 +466,7 @@ export default function TutorRequestsScreen() {
     chatMessages.forEach((msg, index) => {
       messages.push({
         id: `msg-${index}`,
-        userId: msg.sender === 'student' ? (selectedRequest.studentId || 'student') : (user?.id || 'tutor'),
+        userId: msg.sender === 'student' ? (selectedRequest.studentId ?? 'student') : (user?.id ?? 'tutor'),
         name: msg.sender === 'student' ? (selectedRequest.studentId ? getStudentInfo(selectedRequest.studentId)?.name || 'Student' : 'Student') : 'Tutor',
         message: msg.message,
         timestamp: new Date(msg.timestamp).toISOString()

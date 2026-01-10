@@ -1,24 +1,40 @@
+"use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined") return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
-});
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
 // server/index.ts
-import express from "express";
+var import_express = __toESM(require("express"));
 
 // server/routes.ts
-import { createServer } from "node:http";
+var import_node_http = require("node:http");
 
 // server/storage.ts
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+var import_better_sqlite3 = require("drizzle-orm/better-sqlite3");
+var import_better_sqlite32 = __toESM(require("better-sqlite3"));
 
 // shared/schema.ts
 var schema_exports = {};
@@ -59,434 +75,434 @@ __export(schema_exports, {
   userTutors: () => userTutors,
   users: () => users
 });
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
-import { z } from "zod";
-var users = sqliteTable("users", {
-  id: text("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  role: text("role").notNull().default("student"),
+var import_sqlite_core = require("drizzle-orm/sqlite-core");
+var import_drizzle_orm = require("drizzle-orm");
+var import_zod = require("zod");
+var users = (0, import_sqlite_core.sqliteTable)("users", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  username: (0, import_sqlite_core.text)("username").notNull().unique(),
+  email: (0, import_sqlite_core.text)("email").notNull().unique(),
+  password: (0, import_sqlite_core.text)("password").notNull(),
+  role: (0, import_sqlite_core.text)("role").notNull().default("student"),
   // student, lecturer, tutor, admin
-  name: text("name").notNull(),
-  selectedCourses: text("selectedCourses").default("[]"),
+  name: (0, import_sqlite_core.text)("name").notNull(),
+  selectedCourses: (0, import_sqlite_core.text)("selectedCourses").default("[]"),
   // JSON string
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var courses = sqliteTable("courses", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  code: text("code").notNull().unique(),
-  category: text("category").notNull(),
-  description: text("description"),
-  lecturerId: text("lecturerId").references(() => users.id),
-  lecturerName: text("lecturerName"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+var courses = (0, import_sqlite_core.sqliteTable)("courses", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  name: (0, import_sqlite_core.text)("name").notNull(),
+  code: (0, import_sqlite_core.text)("code").notNull().unique(),
+  category: (0, import_sqlite_core.text)("category").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  lecturerId: (0, import_sqlite_core.text)("lecturerId").references(() => users.id),
+  lecturerName: (0, import_sqlite_core.text)("lecturerName"),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var liveSessions = sqliteTable("live_sessions", {
-  id: text("id").primaryKey(),
-  courseId: text("courseId").references(() => courses.id),
-  lecturerId: text("lecturerId").references(() => users.id),
-  lecturerName: text("lecturerName"),
-  topic: text("topic").notNull(),
-  scheduledTime: integer("scheduledTime"),
-  startTime: integer("startTime"),
-  endTime: integer("endTime"),
-  isLive: integer("isLive").default(0),
-  participants: integer("participants").default(0),
-  settings: text("settings"),
+var liveSessions = (0, import_sqlite_core.sqliteTable)("live_sessions", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  courseId: (0, import_sqlite_core.text)("courseId").references(() => courses.id),
+  lecturerId: (0, import_sqlite_core.text)("lecturerId").references(() => users.id),
+  lecturerName: (0, import_sqlite_core.text)("lecturerName"),
+  topic: (0, import_sqlite_core.text)("topic").notNull(),
+  scheduledTime: (0, import_sqlite_core.integer)("scheduledTime"),
+  startTime: (0, import_sqlite_core.integer)("startTime"),
+  endTime: (0, import_sqlite_core.integer)("endTime"),
+  isLive: (0, import_sqlite_core.integer)("isLive").default(0),
+  participants: (0, import_sqlite_core.integer)("participants").default(0),
+  settings: (0, import_sqlite_core.text)("settings"),
   // JSON string
-  currentDocument: text("currentDocument"),
+  currentDocument: (0, import_sqlite_core.text)("currentDocument"),
   // JSON string: { id, title, url }
-  currentPage: integer("currentPage").default(1),
-  annotations: text("annotations"),
+  currentPage: (0, import_sqlite_core.integer)("currentPage").default(1),
+  annotations: (0, import_sqlite_core.text)("annotations"),
   // JSON string
-  currentTool: text("currentTool").default("draw"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  currentTool: (0, import_sqlite_core.text)("currentTool").default("draw"),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var chatMessages = sqliteTable("chat_messages", {
-  id: text("id").primaryKey(),
-  sessionId: text("sessionId").references(() => liveSessions.id),
-  userId: text("userId").references(() => users.id),
-  message: text("message").notNull(),
-  timestamp: integer("timestamp").default(sql`(unixepoch())`)
+var chatMessages = (0, import_sqlite_core.sqliteTable)("chat_messages", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  sessionId: (0, import_sqlite_core.text)("sessionId").references(() => liveSessions.id),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  message: (0, import_sqlite_core.text)("message").notNull(),
+  timestamp: (0, import_sqlite_core.integer)("timestamp").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var sharedDocuments = sqliteTable("shared_documents", {
-  id: text("id").primaryKey(),
-  sessionId: text("sessionId").references(() => liveSessions.id),
-  userId: text("userId").references(() => users.id),
-  title: text("title").notNull(),
-  fileUrl: text("fileUrl").notNull(),
-  fileType: text("fileType").notNull(),
+var sharedDocuments = (0, import_sqlite_core.sqliteTable)("shared_documents", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  sessionId: (0, import_sqlite_core.text)("sessionId").references(() => liveSessions.id),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  fileUrl: (0, import_sqlite_core.text)("fileUrl").notNull(),
+  fileType: (0, import_sqlite_core.text)("fileType").notNull(),
   // pdf, doc, docx
-  annotations: text("annotations"),
+  annotations: (0, import_sqlite_core.text)("annotations"),
   // JSON string
-  sharedAt: integer("sharedAt").default(sql`(unixepoch())`)
+  sharedAt: (0, import_sqlite_core.integer)("sharedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var lecturerMaterials = sqliteTable("lecturer_materials", {
-  id: text("id").primaryKey(),
-  lecturerId: text("lecturerId").references(() => users.id),
-  courseId: text("courseId").references(() => courses.id),
-  title: text("title").notNull(),
-  description: text("description"),
-  fileUrl: text("fileUrl"),
-  fileType: text("fileType"),
+var lecturerMaterials = (0, import_sqlite_core.sqliteTable)("lecturer_materials", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  lecturerId: (0, import_sqlite_core.text)("lecturerId").references(() => users.id),
+  courseId: (0, import_sqlite_core.text)("courseId").references(() => courses.id),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  fileUrl: (0, import_sqlite_core.text)("fileUrl"),
+  fileType: (0, import_sqlite_core.text)("fileType"),
   // pdf, doc, docx, link
-  content: text("content"),
+  content: (0, import_sqlite_core.text)("content"),
   // For text content or link
-  size: integer("size"),
+  size: (0, import_sqlite_core.integer)("size"),
   // File size in bytes
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  isDeleted: integer("isDeleted").default(0)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  isDeleted: (0, import_sqlite_core.integer)("isDeleted").default(0)
 });
-var tutorRequests = sqliteTable("tutor_requests", {
-  id: text("id").primaryKey(),
-  studentId: text("studentId").references(() => users.id),
-  courseId: text("courseId").references(() => courses.id),
-  type: text("type").notNull(),
+var tutorRequests = (0, import_sqlite_core.sqliteTable)("tutor_requests", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  studentId: (0, import_sqlite_core.text)("studentId").references(() => users.id),
+  courseId: (0, import_sqlite_core.text)("courseId").references(() => courses.id),
+  type: (0, import_sqlite_core.text)("type").notNull(),
   // topic_help, question, assignment_help
-  title: text("title").notNull(),
-  description: text("description"),
-  messages: text("messages"),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  messages: (0, import_sqlite_core.text)("messages"),
   // JSON string for conversation history
-  response: text("response"),
+  response: (0, import_sqlite_core.text)("response"),
   // Tutor's response to the request
-  status: text("status").default("pending"),
+  status: (0, import_sqlite_core.text)("status").default("pending"),
   // pending, answered, resolved
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  updatedAt: (0, import_sqlite_core.integer)("updatedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var deletedMaterials = sqliteTable("deleted_materials", {
-  id: text("id").primaryKey(),
-  originalId: text("originalId").notNull(),
-  lecturerId: text("lecturerId").references(() => users.id),
-  courseId: text("courseId").references(() => courses.id),
-  title: text("title").notNull(),
-  description: text("description"),
-  fileUrl: text("fileUrl"),
-  fileType: text("fileType"),
+var deletedMaterials = (0, import_sqlite_core.sqliteTable)("deleted_materials", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  originalId: (0, import_sqlite_core.text)("originalId").notNull(),
+  lecturerId: (0, import_sqlite_core.text)("lecturerId").references(() => users.id),
+  courseId: (0, import_sqlite_core.text)("courseId").references(() => courses.id),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  fileUrl: (0, import_sqlite_core.text)("fileUrl"),
+  fileType: (0, import_sqlite_core.text)("fileType"),
   // pdf, doc, docx, link
-  content: text("content"),
+  content: (0, import_sqlite_core.text)("content"),
   // For text content or link
-  size: integer("size"),
+  size: (0, import_sqlite_core.integer)("size"),
   // File size in bytes
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  deletedAt: integer("deletedAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  deletedAt: (0, import_sqlite_core.integer)("deletedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var supportRequests = sqliteTable("support_requests", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  type: text("type").notNull(),
+var supportRequests = (0, import_sqlite_core.sqliteTable)("support_requests", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  type: (0, import_sqlite_core.text)("type").notNull(),
   // password_reset, account_issue, technical_problem, other
-  title: text("title").notNull(),
-  description: text("description"),
-  status: text("status").default("open"),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  status: (0, import_sqlite_core.text)("status").default("open"),
   // open, in_progress, resolved, closed
-  assignedTo: text("assignedTo").references(() => users.id),
+  assignedTo: (0, import_sqlite_core.text)("assignedTo").references(() => users.id),
   // admin/tutor handling it
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  updatedAt: (0, import_sqlite_core.integer)("updatedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var userAnalytics = sqliteTable("user_analytics", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  metric: text("metric").notNull(),
+var userAnalytics = (0, import_sqlite_core.sqliteTable)("user_analytics", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  metric: (0, import_sqlite_core.text)("metric").notNull(),
   // sessions_attended, documents_viewed, messages_sent, etc.
-  value: integer("value").notNull(),
-  date: integer("date").default(sql`(unixepoch())`)
+  value: (0, import_sqlite_core.integer)("value").notNull(),
+  date: (0, import_sqlite_core.integer)("date").default(import_drizzle_orm.sql`(unixepoch())`)
   // unix timestamp
 });
-var userTutors = sqliteTable("user_tutors", {
-  id: text("id").primaryKey(),
-  studentId: text("studentId").references(() => users.id),
-  tutorId: text("tutorId").references(() => users.id),
-  courseId: text("courseId").references(() => courses.id),
-  assignedBy: text("assignedBy").references(() => users.id),
+var userTutors = (0, import_sqlite_core.sqliteTable)("user_tutors", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  studentId: (0, import_sqlite_core.text)("studentId").references(() => users.id),
+  tutorId: (0, import_sqlite_core.text)("tutorId").references(() => users.id),
+  courseId: (0, import_sqlite_core.text)("courseId").references(() => courses.id),
+  assignedBy: (0, import_sqlite_core.text)("assignedBy").references(() => users.id),
   // who assigned
-  assignedAt: integer("assignedAt").default(sql`(unixepoch())`),
-  status: text("status").default("active")
+  assignedAt: (0, import_sqlite_core.integer)("assignedAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  status: (0, import_sqlite_core.text)("status").default("active")
   // active, inactive
 });
-var subscriptionPlans = sqliteTable("subscription_plans", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  price: integer("price").notNull(),
+var subscriptionPlans = (0, import_sqlite_core.sqliteTable)("subscription_plans", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  name: (0, import_sqlite_core.text)("name").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  price: (0, import_sqlite_core.integer)("price").notNull(),
   // Price in cents
-  currency: text("currency").notNull().default("USD"),
-  duration: integer("duration").notNull(),
+  currency: (0, import_sqlite_core.text)("currency").notNull().default("USD"),
+  duration: (0, import_sqlite_core.integer)("duration").notNull(),
   // Duration in days
-  features: text("features"),
+  features: (0, import_sqlite_core.text)("features"),
   // JSON string
-  isActive: integer("isActive").default(1),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  isActive: (0, import_sqlite_core.integer)("isActive").default(1),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var userSubscriptions = sqliteTable("user_subscriptions", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  planId: text("planId").references(() => subscriptionPlans.id),
-  status: text("status").notNull().default("active"),
+var userSubscriptions = (0, import_sqlite_core.sqliteTable)("user_subscriptions", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  planId: (0, import_sqlite_core.text)("planId").references(() => subscriptionPlans.id),
+  status: (0, import_sqlite_core.text)("status").notNull().default("active"),
   // active, cancelled, expired, paused
-  startDate: integer("startDate").notNull(),
-  endDate: integer("endDate").notNull(),
-  autoRenew: integer("autoRenew").default(1),
+  startDate: (0, import_sqlite_core.integer)("startDate").notNull(),
+  endDate: (0, import_sqlite_core.integer)("endDate").notNull(),
+  autoRenew: (0, import_sqlite_core.integer)("autoRenew").default(1),
   // boolean
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  updatedAt: (0, import_sqlite_core.integer)("updatedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var payments = sqliteTable("payments", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  subscriptionId: text("subscriptionId").references(() => userSubscriptions.id),
+var payments = (0, import_sqlite_core.sqliteTable)("payments", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  subscriptionId: (0, import_sqlite_core.text)("subscriptionId").references(() => userSubscriptions.id),
   // nullable
-  amount: integer("amount").notNull(),
+  amount: (0, import_sqlite_core.integer)("amount").notNull(),
   // Amount in cents
-  currency: text("currency").notNull().default("USD"),
-  status: text("status").notNull().default("pending"),
+  currency: (0, import_sqlite_core.text)("currency").notNull().default("USD"),
+  status: (0, import_sqlite_core.text)("status").notNull().default("pending"),
   // pending, processing, completed, failed, refunded, retrying, otp_required
-  paymentMethod: text("paymentMethod").notNull(),
+  paymentMethod: (0, import_sqlite_core.text)("paymentMethod").notNull(),
   // card, mpesa, airtel, paypal, etc.
-  transactionId: text("transactionId"),
+  transactionId: (0, import_sqlite_core.text)("transactionId"),
   // External payment provider ID
-  description: text("description"),
-  retryCount: integer("retryCount").default(0),
-  nextRetryAt: integer("nextRetryAt"),
-  maxRetries: integer("maxRetries").default(5),
+  description: (0, import_sqlite_core.text)("description"),
+  retryCount: (0, import_sqlite_core.integer)("retryCount").default(0),
+  nextRetryAt: (0, import_sqlite_core.integer)("nextRetryAt"),
+  maxRetries: (0, import_sqlite_core.integer)("maxRetries").default(5),
   // Mobile payment specific fields
-  mobileProvider: text("mobileProvider"),
+  mobileProvider: (0, import_sqlite_core.text)("mobileProvider"),
   // mpesa, airtel, etc.
-  mobileNumber: text("mobileNumber"),
+  mobileNumber: (0, import_sqlite_core.text)("mobileNumber"),
   // Phone number for mobile payments
-  otpRequired: integer("otpRequired").default(0),
+  otpRequired: (0, import_sqlite_core.integer)("otpRequired").default(0),
   // Boolean flag for OTP requirement
-  otpVerified: integer("otpVerified").default(0),
+  otpVerified: (0, import_sqlite_core.integer)("otpVerified").default(0),
   // Boolean flag for OTP verification status
-  otpId: text("otpId"),
+  otpId: (0, import_sqlite_core.text)("otpId"),
   // OTP verification ID from provider
-  otpExpiresAt: integer("otpExpiresAt"),
+  otpExpiresAt: (0, import_sqlite_core.integer)("otpExpiresAt"),
   // OTP expiration timestamp
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  updatedAt: (0, import_sqlite_core.integer)("updatedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var paymentMethods = sqliteTable("payment_methods", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  type: text("type").notNull(),
+var paymentMethods = (0, import_sqlite_core.sqliteTable)("payment_methods", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  type: (0, import_sqlite_core.text)("type").notNull(),
   // card, paypal, bank_transfer
-  provider: text("provider").notNull(),
+  provider: (0, import_sqlite_core.text)("provider").notNull(),
   // stripe, paypal, etc.
-  last4: text("last4"),
+  last4: (0, import_sqlite_core.text)("last4"),
   // Last 4 digits for cards
-  expiryMonth: integer("expiryMonth"),
-  expiryYear: integer("expiryYear"),
-  isDefault: integer("isDefault").default(0),
+  expiryMonth: (0, import_sqlite_core.integer)("expiryMonth"),
+  expiryYear: (0, import_sqlite_core.integer)("expiryYear"),
+  isDefault: (0, import_sqlite_core.integer)("isDefault").default(0),
   // boolean
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var notifications = sqliteTable("notifications", {
-  id: text("id").primaryKey(),
-  userId: text("userId").references(() => users.id),
-  type: text("type").notNull(),
+var notifications = (0, import_sqlite_core.sqliteTable)("notifications", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  userId: (0, import_sqlite_core.text)("userId").references(() => users.id),
+  type: (0, import_sqlite_core.text)("type").notNull(),
   // payment_failed, payment_retry, payment_success, otp_sent
-  title: text("title").notNull(),
-  message: text("message").notNull(),
-  data: text("data"),
+  title: (0, import_sqlite_core.text)("title").notNull(),
+  message: (0, import_sqlite_core.text)("message").notNull(),
+  data: (0, import_sqlite_core.text)("data"),
   // JSON string for additional data
-  isRead: integer("isRead").default(0),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  isRead: (0, import_sqlite_core.integer)("isRead").default(0),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var otpVerifications = sqliteTable("otp_verifications", {
-  id: text("id").primaryKey(),
-  paymentId: text("paymentId").references(() => payments.id),
-  otpCode: text("otpCode").notNull(),
+var otpVerifications = (0, import_sqlite_core.sqliteTable)("otp_verifications", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  paymentId: (0, import_sqlite_core.text)("paymentId").references(() => payments.id),
+  otpCode: (0, import_sqlite_core.text)("otpCode").notNull(),
   // Hashed OTP code
-  phoneNumber: text("phoneNumber").notNull(),
-  provider: text("provider").notNull(),
+  phoneNumber: (0, import_sqlite_core.text)("phoneNumber").notNull(),
+  provider: (0, import_sqlite_core.text)("provider").notNull(),
   // mpesa, airtel, etc.
-  status: text("status").notNull().default("pending"),
+  status: (0, import_sqlite_core.text)("status").notNull().default("pending"),
   // pending, verified, expired, failed
-  attempts: integer("attempts").default(0),
-  maxAttempts: integer("maxAttempts").default(3),
-  expiresAt: integer("expiresAt").notNull(),
-  verifiedAt: integer("verifiedAt"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`)
+  attempts: (0, import_sqlite_core.integer)("attempts").default(0),
+  maxAttempts: (0, import_sqlite_core.integer)("maxAttempts").default(3),
+  expiresAt: (0, import_sqlite_core.integer)("expiresAt").notNull(),
+  verifiedAt: (0, import_sqlite_core.integer)("verifiedAt"),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var mobilePaymentProviders = sqliteTable("mobile_payment_providers", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
+var mobilePaymentProviders = (0, import_sqlite_core.sqliteTable)("mobile_payment_providers", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  name: (0, import_sqlite_core.text)("name").notNull(),
   // mpesa, airtel, zamtel, etc.
-  displayName: text("displayName").notNull(),
-  country: text("country").notNull(),
+  displayName: (0, import_sqlite_core.text)("displayName").notNull(),
+  country: (0, import_sqlite_core.text)("country").notNull(),
   // ZM, KE, TZ, etc.
-  currency: text("currency").notNull(),
+  currency: (0, import_sqlite_core.text)("currency").notNull(),
   // ZMW, KES, TZS, etc.
-  minAmount: integer("minAmount").notNull(),
+  minAmount: (0, import_sqlite_core.integer)("minAmount").notNull(),
   // Minimum amount in cents
-  maxAmount: integer("maxAmount").notNull(),
+  maxAmount: (0, import_sqlite_core.integer)("maxAmount").notNull(),
   // Maximum amount in cents
-  isActive: integer("isActive").default(1),
-  apiEndpoint: text("apiEndpoint"),
+  isActive: (0, import_sqlite_core.integer)("isActive").default(1),
+  apiEndpoint: (0, import_sqlite_core.text)("apiEndpoint"),
   // For production API
-  apiKey: text("apiKey"),
+  apiKey: (0, import_sqlite_core.text)("apiKey"),
   // Encrypted API key
-  apiSecret: text("apiSecret"),
+  apiSecret: (0, import_sqlite_core.text)("apiSecret"),
   // Encrypted API secret
-  webhookUrl: text("webhookUrl"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`)
+  webhookUrl: (0, import_sqlite_core.text)("webhookUrl"),
+  createdAt: (0, import_sqlite_core.integer)("createdAt").default(import_drizzle_orm.sql`(unixepoch())`),
+  updatedAt: (0, import_sqlite_core.integer)("updatedAt").default(import_drizzle_orm.sql`(unixepoch())`)
 });
-var insertUserSchema = z.object({
-  username: z.string(),
-  email: z.string(),
-  password: z.string(),
-  role: z.string().optional().default("student"),
-  name: z.string()
+var insertUserSchema = import_zod.z.object({
+  username: import_zod.z.string(),
+  email: import_zod.z.string(),
+  password: import_zod.z.string(),
+  role: import_zod.z.string().optional().default("student"),
+  name: import_zod.z.string()
 });
-var insertCourseSchema = z.object({
-  name: z.string(),
-  code: z.string(),
-  category: z.string(),
-  description: z.string().optional(),
-  lecturerId: z.string().optional()
+var insertCourseSchema = import_zod.z.object({
+  name: import_zod.z.string(),
+  code: import_zod.z.string(),
+  category: import_zod.z.string(),
+  description: import_zod.z.string().optional(),
+  lecturerId: import_zod.z.string().optional()
 });
-var insertLiveSessionSchema = z.object({
-  courseId: z.string(),
-  lecturerId: z.string(),
-  topic: z.string(),
-  scheduledTime: z.number().optional()
+var insertLiveSessionSchema = import_zod.z.object({
+  courseId: import_zod.z.string(),
+  lecturerId: import_zod.z.string(),
+  topic: import_zod.z.string(),
+  scheduledTime: import_zod.z.number().optional()
 });
-var insertChatMessageSchema = z.object({
-  sessionId: z.string(),
-  userId: z.string(),
-  message: z.string()
+var insertChatMessageSchema = import_zod.z.object({
+  sessionId: import_zod.z.string(),
+  userId: import_zod.z.string(),
+  message: import_zod.z.string()
 });
-var insertSharedDocumentSchema = z.object({
-  sessionId: z.string(),
-  userId: z.string(),
-  title: z.string(),
-  fileUrl: z.string(),
-  fileType: z.string()
+var insertSharedDocumentSchema = import_zod.z.object({
+  sessionId: import_zod.z.string(),
+  userId: import_zod.z.string(),
+  title: import_zod.z.string(),
+  fileUrl: import_zod.z.string(),
+  fileType: import_zod.z.string()
 });
-var insertLecturerMaterialSchema = z.object({
-  lecturerId: z.string(),
-  courseId: z.string(),
-  title: z.string(),
-  description: z.string().optional(),
-  fileUrl: z.string().optional(),
-  fileType: z.string().optional(),
-  content: z.string().optional(),
-  size: z.number().optional()
+var insertLecturerMaterialSchema = import_zod.z.object({
+  lecturerId: import_zod.z.string(),
+  courseId: import_zod.z.string(),
+  title: import_zod.z.string(),
+  description: import_zod.z.string().optional(),
+  fileUrl: import_zod.z.string().optional(),
+  fileType: import_zod.z.string().optional(),
+  content: import_zod.z.string().optional(),
+  size: import_zod.z.number().optional()
 });
-var insertTutorRequestSchema = z.object({
-  studentId: z.string(),
-  courseId: z.string(),
-  type: z.string(),
-  title: z.string(),
-  description: z.string().optional(),
-  messages: z.string().optional()
+var insertTutorRequestSchema = import_zod.z.object({
+  studentId: import_zod.z.string(),
+  courseId: import_zod.z.string(),
+  type: import_zod.z.string(),
+  title: import_zod.z.string(),
+  description: import_zod.z.string().optional(),
+  messages: import_zod.z.string().optional()
 });
-var insertDeletedMaterialSchema = z.object({
-  originalId: z.string(),
-  lecturerId: z.string(),
-  courseId: z.string(),
-  title: z.string(),
-  description: z.string().optional(),
-  fileUrl: z.string().optional(),
-  fileType: z.string().optional(),
-  content: z.string().optional(),
-  size: z.number().optional()
+var insertDeletedMaterialSchema = import_zod.z.object({
+  originalId: import_zod.z.string(),
+  lecturerId: import_zod.z.string(),
+  courseId: import_zod.z.string(),
+  title: import_zod.z.string(),
+  description: import_zod.z.string().optional(),
+  fileUrl: import_zod.z.string().optional(),
+  fileType: import_zod.z.string().optional(),
+  content: import_zod.z.string().optional(),
+  size: import_zod.z.number().optional()
 });
-var insertSupportRequestSchema = z.object({
-  userId: z.string(),
-  type: z.string(),
-  title: z.string(),
-  description: z.string().optional()
+var insertSupportRequestSchema = import_zod.z.object({
+  userId: import_zod.z.string(),
+  type: import_zod.z.string(),
+  title: import_zod.z.string(),
+  description: import_zod.z.string().optional()
 });
-var insertUserAnalyticsSchema = z.object({
-  userId: z.string(),
-  metric: z.string(),
-  value: z.number(),
-  date: z.number().optional()
+var insertUserAnalyticsSchema = import_zod.z.object({
+  userId: import_zod.z.string(),
+  metric: import_zod.z.string(),
+  value: import_zod.z.number(),
+  date: import_zod.z.number().optional()
 });
-var insertUserTutorSchema = z.object({
-  studentId: z.string(),
-  tutorId: z.string(),
-  courseId: z.string(),
-  assignedBy: z.string()
+var insertUserTutorSchema = import_zod.z.object({
+  studentId: import_zod.z.string(),
+  tutorId: import_zod.z.string(),
+  courseId: import_zod.z.string(),
+  assignedBy: import_zod.z.string()
 });
-var insertSubscriptionPlanSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  price: z.number(),
-  currency: z.string().optional().default("USD"),
-  duration: z.number(),
-  features: z.string().optional(),
-  isActive: z.number().optional().default(1)
+var insertSubscriptionPlanSchema = import_zod.z.object({
+  name: import_zod.z.string(),
+  description: import_zod.z.string().optional(),
+  price: import_zod.z.number(),
+  currency: import_zod.z.string().optional().default("USD"),
+  duration: import_zod.z.number(),
+  features: import_zod.z.string().optional(),
+  isActive: import_zod.z.number().optional().default(1)
 });
-var insertUserSubscriptionSchema = z.object({
-  userId: z.string(),
-  planId: z.string(),
-  status: z.string().optional().default("active"),
-  startDate: z.number(),
-  endDate: z.number(),
-  autoRenew: z.number().optional().default(1)
+var insertUserSubscriptionSchema = import_zod.z.object({
+  userId: import_zod.z.string(),
+  planId: import_zod.z.string(),
+  status: import_zod.z.string().optional().default("active"),
+  startDate: import_zod.z.number(),
+  endDate: import_zod.z.number(),
+  autoRenew: import_zod.z.number().optional().default(1)
 });
-var insertPaymentSchema = z.object({
-  userId: z.string(),
-  subscriptionId: z.string().optional(),
-  amount: z.number(),
-  currency: z.string().optional().default("USD"),
-  status: z.string().optional().default("pending"),
-  paymentMethod: z.string(),
-  transactionId: z.string().optional(),
-  description: z.string().optional()
+var insertPaymentSchema = import_zod.z.object({
+  userId: import_zod.z.string(),
+  subscriptionId: import_zod.z.string().optional(),
+  amount: import_zod.z.number(),
+  currency: import_zod.z.string().optional().default("USD"),
+  status: import_zod.z.string().optional().default("pending"),
+  paymentMethod: import_zod.z.string(),
+  transactionId: import_zod.z.string().optional(),
+  description: import_zod.z.string().optional()
 });
-var insertPaymentMethodSchema = z.object({
-  userId: z.string(),
-  type: z.string(),
-  provider: z.string(),
-  last4: z.string().optional(),
-  expiryMonth: z.number().optional(),
-  expiryYear: z.number().optional(),
-  isDefault: z.number().optional().default(0)
+var insertPaymentMethodSchema = import_zod.z.object({
+  userId: import_zod.z.string(),
+  type: import_zod.z.string(),
+  provider: import_zod.z.string(),
+  last4: import_zod.z.string().optional(),
+  expiryMonth: import_zod.z.number().optional(),
+  expiryYear: import_zod.z.number().optional(),
+  isDefault: import_zod.z.number().optional().default(0)
 });
-var insertOtpVerificationSchema = z.object({
-  paymentId: z.string().optional(),
-  otpCode: z.string(),
-  phoneNumber: z.string(),
-  provider: z.string(),
-  status: z.string().optional().default("pending"),
-  attempts: z.number().optional().default(0),
-  maxAttempts: z.number().optional().default(3),
-  expiresAt: z.number(),
-  verifiedAt: z.number().optional()
+var insertOtpVerificationSchema = import_zod.z.object({
+  paymentId: import_zod.z.string().optional(),
+  otpCode: import_zod.z.string(),
+  phoneNumber: import_zod.z.string(),
+  provider: import_zod.z.string(),
+  status: import_zod.z.string().optional().default("pending"),
+  attempts: import_zod.z.number().optional().default(0),
+  maxAttempts: import_zod.z.number().optional().default(3),
+  expiresAt: import_zod.z.number(),
+  verifiedAt: import_zod.z.number().optional()
 });
-var insertMobilePaymentProviderSchema = z.object({
-  name: z.string(),
-  displayName: z.string(),
-  country: z.string(),
-  currency: z.string(),
-  minAmount: z.number(),
-  maxAmount: z.number(),
-  isActive: z.number().optional().default(1),
-  apiEndpoint: z.string().optional(),
-  apiKey: z.string().optional(),
-  apiSecret: z.string().optional(),
-  webhookUrl: z.string().optional()
+var insertMobilePaymentProviderSchema = import_zod.z.object({
+  name: import_zod.z.string(),
+  displayName: import_zod.z.string(),
+  country: import_zod.z.string(),
+  currency: import_zod.z.string(),
+  minAmount: import_zod.z.number(),
+  maxAmount: import_zod.z.number(),
+  isActive: import_zod.z.number().optional().default(1),
+  apiEndpoint: import_zod.z.string().optional(),
+  apiKey: import_zod.z.string().optional(),
+  apiSecret: import_zod.z.string().optional(),
+  webhookUrl: import_zod.z.string().optional()
 });
 
 // server/storage.ts
-var sqlite = new Database("database.db");
+var sqlite = new import_better_sqlite32.default("database.db");
 sqlite.pragma("foreign_keys = ON");
-var db = drizzle(sqlite, { schema: schema_exports });
+var db = (0, import_better_sqlite3.drizzle)(sqlite, { schema: schema_exports });
 
 // server/routes.ts
-import { eq, and, inArray, or, ne, sql as sql2, gte, lte } from "drizzle-orm";
-import jwt from "jsonwebtoken";
-import multer from "multer";
-import { randomUUID } from "crypto";
-import Stripe from "stripe";
+var import_drizzle_orm2 = require("drizzle-orm");
+var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
+var import_multer = __toESM(require("multer"));
+var import_crypto = require("crypto");
+var import_stripe = __toESM(require("stripe"));
 var materialsCache = /* @__PURE__ */ new Map();
 var CACHE_TTL = 5 * 60 * 1e3;
 var SAMPLE_COURSES = [
@@ -557,10 +573,10 @@ var SAMPLE_COURSES = [
 ];
 async function seedCourses() {
   try {
-    const lecturerUser = await db.select().from(users).where(eq(users.role, "lecturer")).limit(1);
+    const lecturerUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "lecturer")).limit(1);
     const lecturerId = lecturerUser.length > 0 ? lecturerUser[0].id : null;
     for (const course of SAMPLE_COURSES) {
-      const existing = await db.select().from(courses).where(eq(courses.id, course.id)).limit(1);
+      const existing = await db.select().from(courses).where((0, import_drizzle_orm2.eq)(courses.id, course.id)).limit(1);
       if (existing.length === 0) {
         await db.insert(courses).values({
           id: course.id,
@@ -573,7 +589,7 @@ async function seedCourses() {
         });
       } else {
         if (!existing[0].lecturerId && lecturerId) {
-          await db.update(courses).set({ lecturerId }).where(eq(courses.id, course.id));
+          await db.update(courses).set({ lecturerId }).where((0, import_drizzle_orm2.eq)(courses.id, course.id));
         }
       }
     }
@@ -620,7 +636,7 @@ async function seedUsers() {
       }
     ];
     for (const user of testUsers) {
-      const existing = await db.select().from(users).where(eq(users.email, user.email)).limit(1);
+      const existing = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.email, user.email)).limit(1);
       if (existing.length === 0) {
         await db.insert(users).values({
           id: user.id,
@@ -640,7 +656,7 @@ async function seedUsers() {
 }
 async function seedMaterials() {
   try {
-    const lecturerUser = await db.select().from(users).where(eq(users.role, "lecturer")).limit(1);
+    const lecturerUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "lecturer")).limit(1);
     const lecturerId = lecturerUser.length > 0 ? lecturerUser[0].id : null;
     if (!lecturerId) {
       console.log("No lecturer user found, skipping material seeding");
@@ -668,14 +684,14 @@ async function seedMaterials() {
       }
     ];
     for (const material of testMaterials) {
-      const existing = await db.select().from(lecturerMaterials).where(eq(lecturerMaterials.title, material.title)).limit(1);
+      const existing = await db.select().from(lecturerMaterials).where((0, import_drizzle_orm2.eq)(lecturerMaterials.title, material.title)).limit(1);
       if (existing.length === 0) {
         const newMaterial = await db.insert(lecturerMaterials).values({
-          id: randomUUID(),
+          id: (0, import_crypto.randomUUID)(),
           ...material
         }).returning();
         const fileUrl = `/api/files/${newMaterial[0].id}`;
-        await db.update(lecturerMaterials).set({ fileUrl }).where(eq(lecturerMaterials.id, newMaterial[0].id));
+        await db.update(lecturerMaterials).set({ fileUrl }).where((0, import_drizzle_orm2.eq)(lecturerMaterials.id, newMaterial[0].id));
       }
     }
     console.log("Materials seeded");
@@ -685,9 +701,9 @@ async function seedMaterials() {
 }
 async function seedTutorAssignments() {
   try {
-    const studentUser = await db.select().from(users).where(eq(users.role, "student")).limit(1);
-    const tutorUser = await db.select().from(users).where(eq(users.role, "tutor")).limit(1);
-    const adminUser = await db.select().from(users).where(eq(users.role, "admin")).limit(1);
+    const studentUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "student")).limit(1);
+    const tutorUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "tutor")).limit(1);
+    const adminUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "admin")).limit(1);
     if (!studentUser.length || !tutorUser.length || !adminUser.length) {
       console.log("Required users not found, skipping tutor assignment seeding");
       return;
@@ -695,10 +711,10 @@ async function seedTutorAssignments() {
     const studentId = studentUser[0].id;
     const tutorId = tutorUser[0].id;
     const assignedBy = adminUser[0].id;
-    const existing = await db.select().from(userTutors).where(and(eq(userTutors.studentId, studentId), eq(userTutors.tutorId, tutorId))).limit(1);
+    const existing = await db.select().from(userTutors).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(userTutors.studentId, studentId), (0, import_drizzle_orm2.eq)(userTutors.tutorId, tutorId))).limit(1);
     if (existing.length === 0) {
       await db.insert(userTutors).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         studentId,
         tutorId,
         courseId: "1",
@@ -713,14 +729,14 @@ async function seedTutorAssignments() {
 }
 async function seedTutorRequests() {
   try {
-    const studentUser = await db.select().from(users).where(eq(users.role, "student")).limit(1);
+    const studentUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "student")).limit(1);
     if (!studentUser.length) {
       console.log("No student user found, skipping tutor request seeding");
       return;
     }
     const studentId = studentUser[0].id;
     await db.insert(tutorRequests).values({
-      id: randomUUID(),
+      id: (0, import_crypto.randomUUID)(),
       studentId,
       courseId: "1",
       type: "question",
@@ -734,7 +750,7 @@ async function seedTutorRequests() {
 }
 async function seedLiveSessions() {
   try {
-    const lecturerUser = await db.select().from(users).where(eq(users.role, "lecturer")).limit(1);
+    const lecturerUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "lecturer")).limit(1);
     const lecturerId = lecturerUser.length > 0 ? lecturerUser[0].id : null;
     if (!lecturerId) {
       console.log("No lecturer user found, skipping live session seeding");
@@ -750,7 +766,7 @@ async function seedLiveSessions() {
       isLive: 1,
       participants: 5
     };
-    const existing = await db.select().from(liveSessions).where(eq(liveSessions.id, testSession.id)).limit(1);
+    const existing = await db.select().from(liveSessions).where((0, import_drizzle_orm2.eq)(liveSessions.id, testSession.id)).limit(1);
     if (existing.length === 0) {
       await db.insert(liveSessions).values(testSession);
     }
@@ -800,20 +816,20 @@ async function seedSubscriptionPlans() {
       }
     ];
     for (const plan of plans) {
-      const existing = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, plan.id)).limit(1);
+      const existing = await db.select().from(subscriptionPlans).where((0, import_drizzle_orm2.eq)(subscriptionPlans.id, plan.id)).limit(1);
       if (existing.length === 0) {
         await db.insert(subscriptionPlans).values(plan);
       }
     }
-    const studentUser = await db.select().from(users).where(eq(users.role, "student")).limit(1);
+    const studentUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "student")).limit(1);
     if (studentUser.length > 0) {
       const studentId = studentUser[0].id;
-      const existingSub = await db.select().from(userSubscriptions).where(eq(userSubscriptions.userId, studentId)).limit(1);
+      const existingSub = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.eq)(userSubscriptions.userId, studentId)).limit(1);
       if (existingSub.length === 0) {
         const now = Math.floor(Date.now() / 1e3);
         const endDate = now + 30 * 24 * 60 * 60;
         await db.insert(userSubscriptions).values({
-          id: randomUUID(),
+          id: (0, import_crypto.randomUUID)(),
           userId: studentId,
           planId: "premium-plan",
           status: "active",
@@ -840,13 +856,13 @@ async function seedAnalytics() {
     ];
     for (const data of analyticsData) {
       if (data.userId) {
-        const existing = await db.select().from(userAnalytics).where(and(
-          eq(userAnalytics.userId, data.userId),
-          eq(userAnalytics.metric, data.metric)
+        const existing = await db.select().from(userAnalytics).where((0, import_drizzle_orm2.and)(
+          (0, import_drizzle_orm2.eq)(userAnalytics.userId, data.userId),
+          (0, import_drizzle_orm2.eq)(userAnalytics.metric, data.metric)
         )).limit(1);
         if (existing.length === 0) {
           await db.insert(userAnalytics).values({
-            id: randomUUID(),
+            id: (0, import_crypto.randomUUID)(),
             userId: data.userId,
             metric: data.metric,
             value: data.value,
@@ -860,11 +876,11 @@ async function seedAnalytics() {
     console.error("Error seeding analytics:", error);
   }
 }
-var fs = __require("fs");
-var path = __require("path");
+var fs = require("fs");
+var path = require("path");
 var materialsFile = path.join(__dirname, "uploadedMaterials.json");
-var storage = multer.memoryStorage();
-var upload = multer({
+var storage = import_multer.default.memoryStorage();
+var upload = (0, import_multer.default)({
   storage,
   limits: { fileSize: 50 * 1024 * 1024 },
   // 50MB limit
@@ -901,7 +917,7 @@ var JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 async function createNotification(userId, type, title, message, data) {
   try {
     await db.insert(notifications).values({
-      id: randomUUID(),
+      id: (0, import_crypto.randomUUID)(),
       userId,
       type,
       title,
@@ -918,7 +934,7 @@ function authenticateToken(req, res, next) {
   if (!token) {
     return res.status(401).json({ error: "Access token required" });
   }
-  jwt.verify(token, JWT_SECRET, (err, user) => {
+  import_jsonwebtoken.default.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: "Invalid or expired token" });
     }
@@ -932,7 +948,7 @@ function requireRole(role) {
       return res.status(401).json({ error: "Authentication required" });
     }
     console.log("requireRole: checking userId", req.user.userId, "for roles", role);
-    db.select().from(users).where(eq(users.id, req.user.userId)).limit(1).then((userResult) => {
+    db.select().from(users).where((0, import_drizzle_orm2.eq)(users.id, req.user.userId)).limit(1).then((userResult) => {
       if (userResult.length === 0) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -952,13 +968,13 @@ function requireRole(role) {
 async function registerRoutes(app2, httpServer, io) {
   let stripe = null;
   if (process.env.STRIPE_SECRET_KEY) {
-    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    stripe = new import_stripe.default(process.env.STRIPE_SECRET_KEY, {
       apiVersion: "2025-12-15.clover"
     });
   }
   async function handlePaymentFailure(transactionId) {
     try {
-      const payment = await db.select().from(payments).where(eq(payments.transactionId, transactionId)).limit(1);
+      const payment = await db.select().from(payments).where((0, import_drizzle_orm2.eq)(payments.transactionId, transactionId)).limit(1);
       if (payment.length === 0) {
         console.error("Payment not found for transaction:", transactionId);
         return;
@@ -976,9 +992,9 @@ async function registerRoutes(app2, httpServer, io) {
         await db.update(payments).set({
           status: "failed",
           updatedAt: now
-        }).where(eq(payments.id, p.id));
+        }).where((0, import_drizzle_orm2.eq)(payments.id, p.id));
         await createNotification(p.userId, "payment_failed", "Payment Failed", `Your payment of ${(p.amount / 100).toFixed(2)} has failed after ${maxRetries} attempts.`, { paymentId: p.id });
-        const admins = await db.select().from(users).where(eq(users.role, "admin"));
+        const admins = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.role, "admin"));
         for (const admin of admins) {
           await createNotification(admin.id, "payment_failed", "Payment Failed", `Payment ${p.id} for user ${p.userId} has failed after ${maxRetries} attempts.`, { paymentId: p.id, userId: p.userId });
         }
@@ -991,7 +1007,7 @@ async function registerRoutes(app2, httpServer, io) {
         retryCount: newRetryCount,
         nextRetryAt,
         updatedAt: now
-      }).where(eq(payments.id, p.id));
+      }).where((0, import_drizzle_orm2.eq)(payments.id, p.id));
       await createNotification(p.userId, "payment_retry", "Payment Retry Scheduled", `Your payment of ${(p.amount / 100).toFixed(2)} failed. We'll retry in ${delayMinutes} minute(s).`, { paymentId: p.id, retryAttempt: newRetryCount });
       console.log(`Payment ${p.id} scheduled for retry ${newRetryCount}/${maxRetries} at ${new Date(nextRetryAt * 1e3).toISOString()}`);
     } catch (error) {
@@ -1002,9 +1018,9 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const now = Math.floor(Date.now() / 1e3);
       const retryPayments = await db.select().from(payments).where(
-        and(
-          eq(payments.status, "retrying"),
-          lte(payments.nextRetryAt, now)
+        (0, import_drizzle_orm2.and)(
+          (0, import_drizzle_orm2.eq)(payments.status, "retrying"),
+          (0, import_drizzle_orm2.lte)(payments.nextRetryAt, now)
         )
       );
       for (const payment of retryPayments) {
@@ -1035,7 +1051,7 @@ async function registerRoutes(app2, httpServer, io) {
         transactionId: paymentIntent.id,
         status: "pending",
         updatedAt: now
-      }).where(eq(payments.id, payment.id));
+      }).where((0, import_drizzle_orm2.eq)(payments.id, payment.id));
       console.log(`Payment ${payment.id} retry initiated with new transaction ${paymentIntent.id}`);
     } catch (error) {
       console.error(`Error retrying payment ${payment.id}:`, error);
@@ -1053,12 +1069,12 @@ async function registerRoutes(app2, httpServer, io) {
   app2.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password } = req.body;
-      const userResult = await db.select().from(users).where(eq(users.email, email)).limit(1);
+      const userResult = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.email, email)).limit(1);
       if (userResult.length === 0 || userResult[0].password !== password) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
       const user = userResult[0];
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = import_jsonwebtoken.default.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
       res.json({
         user: {
           id: user.id,
@@ -1080,7 +1096,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { username, email, password, name, role } = req.body;
       const existingUser = await db.select().from(users).where(
-        eq(users.email, email)
+        (0, import_drizzle_orm2.eq)(users.email, email)
       ).limit(1);
       if (existingUser.length > 0) {
         return res.status(400).json({ error: "User already exists" });
@@ -1091,7 +1107,7 @@ async function registerRoutes(app2, httpServer, io) {
       }
       const hashedPassword = password;
       const newUser = await db.insert(users).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         username,
         email,
         password: hashedPassword,
@@ -1099,7 +1115,7 @@ async function registerRoutes(app2, httpServer, io) {
         role: requestedRole,
         selectedCourses: requestedRole === "student" ? '["1"]' : "[]"
       }).returning();
-      const token = jwt.sign({ userId: newUser[0].id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = import_jsonwebtoken.default.sign({ userId: newUser[0].id }, JWT_SECRET, { expiresIn: "7d" });
       res.json({
         user: {
           id: newUser[0].id,
@@ -1130,7 +1146,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { name, code, category, description, lecturerId } = req.body;
       const newCourse = await db.insert(courses).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         name,
         code,
         category,
@@ -1156,24 +1172,24 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { courseId, lecturerId, topic, scheduledTime } = req.body;
       console.log("Creating session with", { courseId, lecturerId, topic, scheduledTime });
-      const lecturer = await db.select().from(users).where(eq(users.id, lecturerId)).limit(1);
+      const lecturer = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.id, lecturerId)).limit(1);
       if (lecturer.length === 0) {
         console.log("Lecturer not found:", lecturerId);
         return res.status(400).json({ error: "Lecturer not found" });
       }
-      const existingLiveSession = await db.select().from(liveSessions).where(and(eq(liveSessions.lecturerId, lecturerId), eq(liveSessions.isLive, 1))).limit(1);
+      const existingLiveSession = await db.select().from(liveSessions).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(liveSessions.lecturerId, lecturerId), (0, import_drizzle_orm2.eq)(liveSessions.isLive, 1))).limit(1);
       if (existingLiveSession.length > 0) {
         console.log("Lecturer already has a live session:", existingLiveSession[0].id);
         return res.status(400).json({ error: "You already have an active live session. Please end it before starting a new one." });
       }
-      const course = await db.select().from(courses).where(eq(courses.id, courseId)).limit(1);
+      const course = await db.select().from(courses).where((0, import_drizzle_orm2.eq)(courses.id, courseId)).limit(1);
       if (course.length === 0) {
         console.log("Course not found:", courseId);
         return res.status(400).json({ error: "Course not found" });
       }
       const lecturerName = lecturer[0].name || lecturer[0].email.split("@")[0];
       const newSession = await db.insert(liveSessions).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         courseId,
         lecturerId,
         topic,
@@ -1196,7 +1212,7 @@ async function registerRoutes(app2, httpServer, io) {
   app2.put("/api/sessions/:id/end", async (req, res) => {
     try {
       const { id } = req.params;
-      const updatedSession = await db.update(liveSessions).set({ isLive: 0, endTime: Math.floor(Date.now() / 1e3) }).where(eq(liveSessions.id, id)).returning();
+      const updatedSession = await db.update(liveSessions).set({ isLive: 0, endTime: Math.floor(Date.now() / 1e3) }).where((0, import_drizzle_orm2.eq)(liveSessions.id, id)).returning();
       if (updatedSession.length === 0) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -1213,7 +1229,7 @@ async function registerRoutes(app2, httpServer, io) {
   app2.delete("/api/sessions/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      await db.delete(liveSessions).where(eq(liveSessions.id, id));
+      await db.delete(liveSessions).where((0, import_drizzle_orm2.eq)(liveSessions.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Delete session error:", error);
@@ -1229,7 +1245,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (currentPage !== void 0) updateData.currentPage = currentPage;
       if (annotations !== void 0) updateData.annotations = JSON.stringify(annotations);
       if (currentTool !== void 0) updateData.currentTool = currentTool;
-      const updatedSession = await db.update(liveSessions).set(updateData).where(eq(liveSessions.id, id)).returning();
+      const updatedSession = await db.update(liveSessions).set(updateData).where((0, import_drizzle_orm2.eq)(liveSessions.id, id)).returning();
       if (updatedSession.length === 0) {
         return res.status(404).json({ error: "Session not found" });
       }
@@ -1243,7 +1259,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { sessionId } = req.params;
       const messages = await db.select().from(chatMessages).where(
-        eq(chatMessages.sessionId, sessionId)
+        (0, import_drizzle_orm2.eq)(chatMessages.sessionId, sessionId)
       ).orderBy(chatMessages.timestamp);
       res.json(messages);
     } catch (error) {
@@ -1255,7 +1271,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { sessionId, userId, message } = req.body;
       const newMessage = await db.insert(chatMessages).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         sessionId,
         userId,
         message
@@ -1270,7 +1286,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { sessionId, userId, title, fileUrl, fileType } = req.body;
       const newDocument = await db.insert(sharedDocuments).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         sessionId,
         userId,
         title,
@@ -1298,7 +1314,7 @@ async function registerRoutes(app2, httpServer, io) {
         }
       }
       if (lecturerIds.length > 0) {
-        const existingLecturers = await db.select().from(users).where(and(inArray(users.id, lecturerIds), eq(users.role, "lecturer")));
+        const existingLecturers = await db.select().from(users).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.inArray)(users.id, lecturerIds), (0, import_drizzle_orm2.eq)(users.role, "lecturer")));
         if (existingLecturers.length !== lecturerIds.length) {
           return res.status(400).json({ error: "One or more lecturers not found" });
         }
@@ -1324,23 +1340,23 @@ async function registerRoutes(app2, httpServer, io) {
         createdAt: lecturerMaterials.createdAt,
         isDeleted: lecturerMaterials.isDeleted
       };
-      const conditions = [eq(lecturerMaterials.isDeleted, 0)];
+      const conditions = [(0, import_drizzle_orm2.eq)(lecturerMaterials.isDeleted, 0)];
       if (lecturerIds.length > 0) {
         console.log("Building or condition with lecturerIds:", lecturerIds);
-        conditions.push(or(
-          inArray(lecturerMaterials.lecturerId, lecturerIds),
-          inArray(courses.lecturerId, lecturerIds)
+        conditions.push((0, import_drizzle_orm2.or)(
+          (0, import_drizzle_orm2.inArray)(lecturerMaterials.lecturerId, lecturerIds),
+          (0, import_drizzle_orm2.inArray)(courses.lecturerId, lecturerIds)
         ));
       }
       if (courseIds) {
         const courseIdArray = courseIds.split(",").filter((id) => id.trim());
         if (courseIdArray.length > 0) {
-          conditions.push(inArray(lecturerMaterials.courseId, courseIdArray));
+          conditions.push((0, import_drizzle_orm2.inArray)(lecturerMaterials.courseId, courseIdArray));
         }
       }
-      const whereCondition = conditions.length > 1 ? and(...conditions) : conditions[0];
+      const whereCondition = conditions.length > 1 ? (0, import_drizzle_orm2.and)(...conditions) : conditions[0];
       console.log("Querying materials with whereCondition:", whereCondition);
-      const query = db.select(selectFields).from(lecturerMaterials).leftJoin(courses, eq(lecturerMaterials.courseId, courses.id)).where(whereCondition).limit(limitNum).offset(offsetNum);
+      const query = db.select(selectFields).from(lecturerMaterials).leftJoin(courses, (0, import_drizzle_orm2.eq)(lecturerMaterials.courseId, courses.id)).where(whereCondition).limit(limitNum).offset(offsetNum);
       const allMaterials = await query;
       console.log("Found materials:", allMaterials.length);
       const baseUrl = `${req.protocol}://${req.get("host")}`;
@@ -1374,7 +1390,7 @@ async function registerRoutes(app2, httpServer, io) {
       }
       console.log("Inserting into database...");
       const newMaterial = await db.insert(lecturerMaterials).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         lecturerId,
         courseId,
         title,
@@ -1386,7 +1402,7 @@ async function registerRoutes(app2, httpServer, io) {
       }).returning();
       console.log("Material inserted:", newMaterial[0].id);
       await db.insert(userAnalytics).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         userId: lecturerId,
         metric: "materials_uploaded",
         value: 1,
@@ -1395,7 +1411,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (req.file) {
         fileUrl = `/api/files/${newMaterial[0].id}`;
         console.log("Updating fileUrl...");
-        await db.update(lecturerMaterials).set({ fileUrl }).where(eq(lecturerMaterials.id, newMaterial[0].id));
+        await db.update(lecturerMaterials).set({ fileUrl }).where((0, import_drizzle_orm2.eq)(lecturerMaterials.id, newMaterial[0].id));
         newMaterial[0].fileUrl = fileUrl;
         console.log("FileUrl updated");
       }
@@ -1418,12 +1434,12 @@ async function registerRoutes(app2, httpServer, io) {
   app2.delete("/api/materials/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const material = await db.select().from(lecturerMaterials).where(and(eq(lecturerMaterials.id, id), eq(lecturerMaterials.isDeleted, 0))).limit(1);
+      const material = await db.select().from(lecturerMaterials).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(lecturerMaterials.id, id), (0, import_drizzle_orm2.eq)(lecturerMaterials.isDeleted, 0))).limit(1);
       if (material.length === 0) {
         return res.status(404).json({ error: "Material not found" });
       }
       await db.insert(deletedMaterials).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         originalId: id,
         lecturerId: material[0].lecturerId,
         courseId: material[0].courseId,
@@ -1435,7 +1451,7 @@ async function registerRoutes(app2, httpServer, io) {
         size: material[0].size,
         createdAt: material[0].createdAt
       });
-      await db.update(lecturerMaterials).set({ isDeleted: 1 }).where(eq(lecturerMaterials.id, id));
+      await db.update(lecturerMaterials).set({ isDeleted: 1 }).where((0, import_drizzle_orm2.eq)(lecturerMaterials.id, id));
       res.json({ success: true });
       for (const key of materialsCache.keys()) {
         if (key.startsWith("materials_")) {
@@ -1452,7 +1468,7 @@ async function registerRoutes(app2, httpServer, io) {
   });
   app2.get("/api/debug/materials", async (req, res) => {
     try {
-      const allMaterials = await db.select().from(lecturerMaterials).where(eq(lecturerMaterials.isDeleted, 0));
+      const allMaterials = await db.select().from(lecturerMaterials).where((0, import_drizzle_orm2.eq)(lecturerMaterials.isDeleted, 0));
       res.json(allMaterials);
     } catch (error) {
       console.error("Debug materials error:", error);
@@ -1481,7 +1497,7 @@ async function registerRoutes(app2, httpServer, io) {
   app2.get("/api/files/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const material = await db.select().from(lecturerMaterials).where(and(eq(lecturerMaterials.id, id), eq(lecturerMaterials.isDeleted, 0))).limit(1);
+      const material = await db.select().from(lecturerMaterials).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(lecturerMaterials.id, id), (0, import_drizzle_orm2.eq)(lecturerMaterials.isDeleted, 0))).limit(1);
       if (material.length === 0 || !material[0].content) {
         return res.status(404).json({ error: "File not found" });
       }
@@ -1503,7 +1519,7 @@ async function registerRoutes(app2, httpServer, io) {
       const limitNum = parseInt(limit, 10);
       const offsetNum = parseInt(offset, 10);
       const userId = req.user.userId;
-      const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+      const user = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.id, userId)).limit(1);
       if (user.length === 0) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -1514,11 +1530,11 @@ async function registerRoutes(app2, httpServer, io) {
         if (userRole === "student" && studentId !== userId) {
           return res.status(403).json({ error: "Access denied" });
         }
-        requests = await db.select().from(tutorRequests).where(eq(tutorRequests.studentId, studentId));
+        requests = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.studentId, studentId));
         console.log("Debug: requests assigned for studentId, length:", requests.length);
       } else {
         if (userRole === "student") {
-          requests = await db.select().from(tutorRequests).where(eq(tutorRequests.studentId, userId));
+          requests = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.studentId, userId));
           console.log("Debug: requests assigned for student, length:", requests.length);
         } else if (userRole === "tutor") {
           requests = await db.select().from(tutorRequests);
@@ -1545,7 +1561,7 @@ async function registerRoutes(app2, httpServer, io) {
       const studentId = req.user.userId;
       console.log("Debug: Creating tutor request for studentId:", studentId, "courseId:", courseId, "title:", title);
       const newRequest = await db.insert(tutorRequests).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         studentId,
         courseId,
         type,
@@ -1567,7 +1583,7 @@ async function registerRoutes(app2, httpServer, io) {
       const userId = req.user.userId;
       const userRole = req.userDetails.role;
       if (userRole === "student") {
-        const request = await db.select().from(tutorRequests).where(eq(tutorRequests.id, id)).limit(1);
+        const request = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id)).limit(1);
         if (request.length === 0 || request[0].studentId !== userId) {
           return res.status(403).json({ error: "Access denied" });
         }
@@ -1578,7 +1594,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (status !== void 0) updateData.status = status;
       if (response !== void 0) updateData.response = response;
       if (messages !== void 0) updateData.messages = messages;
-      const updatedRequest = await db.update(tutorRequests).set(updateData).where(eq(tutorRequests.id, id)).returning();
+      const updatedRequest = await db.update(tutorRequests).set(updateData).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id)).returning();
       if (updatedRequest.length === 0) {
         return res.status(404).json({ error: "Request not found" });
       }
@@ -1592,11 +1608,11 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const studentId = req.user.userId;
-      const request = await db.select().from(tutorRequests).where(eq(tutorRequests.id, id)).limit(1);
+      const request = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id)).limit(1);
       if (request.length === 0 || request[0].studentId !== studentId) {
         return res.status(403).json({ error: "Access denied" });
       }
-      await db.delete(tutorRequests).where(eq(tutorRequests.id, id));
+      await db.delete(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Delete tutor request error:", error);
@@ -1609,7 +1625,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { message } = req.body;
       const userId = req.user.userId;
       const userRole = req.userDetails.role;
-      const request = await db.select().from(tutorRequests).where(eq(tutorRequests.id, id)).limit(1);
+      const request = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id)).limit(1);
       if (request.length === 0) {
         return res.status(404).json({ error: "Request not found" });
       }
@@ -1618,7 +1634,7 @@ async function registerRoutes(app2, httpServer, io) {
         return res.status(403).json({ error: "Access denied" });
       }
       if (userRole === "tutor") {
-        const assignment = await db.select().from(userTutors).where(and(eq(userTutors.studentId, tutorRequest.studentId), eq(userTutors.tutorId, userId))).limit(1);
+        const assignment = await db.select().from(userTutors).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(userTutors.studentId, tutorRequest.studentId), (0, import_drizzle_orm2.eq)(userTutors.tutorId, userId))).limit(1);
         if (assignment.length === 0) {
           return res.status(403).json({ error: "Access denied" });
         }
@@ -1642,7 +1658,7 @@ async function registerRoutes(app2, httpServer, io) {
       const updatedRequest = await db.update(tutorRequests).set({
         messages: JSON.stringify(messages),
         updatedAt: Math.floor(Date.now() / 1e3)
-      }).where(eq(tutorRequests.id, id)).returning();
+      }).where((0, import_drizzle_orm2.eq)(tutorRequests.id, id)).returning();
       if (updatedRequest.length === 0) {
         return res.status(404).json({ error: "Request not found" });
       }
@@ -1671,12 +1687,12 @@ async function registerRoutes(app2, httpServer, io) {
   app2.post("/api/admin/users", authenticateToken, requireRole("admin"), async (req, res) => {
     try {
       const { username, email, password, name, role } = req.body;
-      const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
+      const existingUser = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.email, email)).limit(1);
       if (existingUser.length > 0) {
         return res.status(400).json({ error: "User already exists" });
       }
       const newUser = await db.insert(users).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         username,
         email,
         password,
@@ -1706,7 +1722,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (name !== void 0) updateData.name = name;
       if (role !== void 0) updateData.role = role;
       if (selectedCourses !== void 0) updateData.selectedCourses = JSON.stringify(selectedCourses);
-      const updatedUser = await db.update(users).set(updateData).where(eq(users.id, id)).returning();
+      const updatedUser = await db.update(users).set(updateData).where((0, import_drizzle_orm2.eq)(users.id, id)).returning();
       if (updatedUser.length === 0) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -1730,22 +1746,22 @@ async function registerRoutes(app2, httpServer, io) {
         return res.status(400).json({ error: "Cannot delete your own account" });
       }
       const references = [];
-      const courseRefs = await db.select().from(courses).where(eq(courses.lecturerId, id));
+      const courseRefs = await db.select().from(courses).where((0, import_drizzle_orm2.eq)(courses.lecturerId, id));
       if (courseRefs.length > 0) references.push(`courses (${courseRefs.length})`);
-      const sessionRefs = await db.select().from(liveSessions).where(eq(liveSessions.lecturerId, id));
+      const sessionRefs = await db.select().from(liveSessions).where((0, import_drizzle_orm2.eq)(liveSessions.lecturerId, id));
       if (sessionRefs.length > 0) references.push(`live sessions (${sessionRefs.length})`);
-      const materialRefs = await db.select().from(lecturerMaterials).where(eq(lecturerMaterials.lecturerId, id));
+      const materialRefs = await db.select().from(lecturerMaterials).where((0, import_drizzle_orm2.eq)(lecturerMaterials.lecturerId, id));
       if (materialRefs.length > 0) references.push(`lecturer materials (${materialRefs.length})`);
-      const tutorRefs = await db.select().from(userTutors).where(or(eq(userTutors.studentId, id), eq(userTutors.tutorId, id), eq(userTutors.assignedBy, id)));
+      const tutorRefs = await db.select().from(userTutors).where((0, import_drizzle_orm2.or)((0, import_drizzle_orm2.eq)(userTutors.studentId, id), (0, import_drizzle_orm2.eq)(userTutors.tutorId, id), (0, import_drizzle_orm2.eq)(userTutors.assignedBy, id)));
       if (tutorRefs.length > 0) references.push(`tutor assignments (${tutorRefs.length})`);
-      const supportRefs = await db.select().from(supportRequests).where(or(eq(supportRequests.userId, id), eq(supportRequests.assignedTo, id)));
+      const supportRefs = await db.select().from(supportRequests).where((0, import_drizzle_orm2.or)((0, import_drizzle_orm2.eq)(supportRequests.userId, id), (0, import_drizzle_orm2.eq)(supportRequests.assignedTo, id)));
       if (supportRefs.length > 0) references.push(`support requests (${supportRefs.length})`);
       if (references.length > 0) {
         return res.status(400).json({
           error: `Cannot delete user because they are referenced in: ${references.join(", ")}. Please reassign or remove these references first.`
         });
       }
-      await db.delete(users).where(eq(users.id, id));
+      await db.delete(users).where((0, import_drizzle_orm2.eq)(users.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Admin delete user error:", error);
@@ -1756,7 +1772,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const { password } = req.body;
-      const updatedUser = await db.update(users).set({ password }).where(eq(users.id, id)).returning();
+      const updatedUser = await db.update(users).set({ password }).where((0, import_drizzle_orm2.eq)(users.id, id)).returning();
       if (updatedUser.length === 0) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -1780,7 +1796,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { type, title, description } = req.body;
       const userId = req.user.userId;
       const newRequest = await db.insert(supportRequests).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         userId,
         type,
         title,
@@ -1799,7 +1815,7 @@ async function registerRoutes(app2, httpServer, io) {
       const updateData = { updatedAt: Math.floor(Date.now() / 1e3) };
       if (status !== void 0) updateData.status = status;
       if (assignedTo !== void 0) updateData.assignedTo = assignedTo;
-      const updatedRequest = await db.update(supportRequests).set(updateData).where(eq(supportRequests.id, id)).returning();
+      const updatedRequest = await db.update(supportRequests).set(updateData).where((0, import_drizzle_orm2.eq)(supportRequests.id, id)).returning();
       if (updatedRequest.length === 0) {
         return res.status(404).json({ error: "Support request not found" });
       }
@@ -1822,7 +1838,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { userId, metric, value, date } = req.body;
       await db.insert(userAnalytics).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         userId,
         metric,
         value,
@@ -1841,30 +1857,30 @@ async function registerRoutes(app2, httpServer, io) {
       const startTimestamp = startDate ? Math.floor(new Date(startDate).getTime() / 1e3) : 0;
       const endTimestamp = endDate ? Math.floor(new Date(endDate).getTime() / 1e3) : Math.floor(Date.now() / 1e3);
       const revenueResult = await db.select({
-        totalRevenue: sql2`SUM(${payments.amount})`,
-        totalTransactions: sql2`COUNT(*)`
-      }).from(payments).where(and(
-        eq(payments.status, "completed"),
-        gte(payments.createdAt, startTimestamp),
-        lte(payments.createdAt, endTimestamp)
+        totalRevenue: import_drizzle_orm2.sql`SUM(${payments.amount})`,
+        totalTransactions: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(payments).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(payments.status, "completed"),
+        (0, import_drizzle_orm2.gte)(payments.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(payments.createdAt, endTimestamp)
       ));
       const revenueByCurrency = await db.select({
         currency: payments.currency,
-        revenue: sql2`SUM(${payments.amount})`,
-        transactions: sql2`COUNT(*)`
-      }).from(payments).where(and(
-        eq(payments.status, "completed"),
-        gte(payments.createdAt, startTimestamp),
-        lte(payments.createdAt, endTimestamp)
+        revenue: import_drizzle_orm2.sql`SUM(${payments.amount})`,
+        transactions: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(payments).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(payments.status, "completed"),
+        (0, import_drizzle_orm2.gte)(payments.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(payments.createdAt, endTimestamp)
       )).groupBy(payments.currency);
       const revenueByMethod = await db.select({
         paymentMethod: payments.paymentMethod,
-        revenue: sql2`SUM(${payments.amount})`,
-        transactions: sql2`COUNT(*)`
-      }).from(payments).where(and(
-        eq(payments.status, "completed"),
-        gte(payments.createdAt, startTimestamp),
-        lte(payments.createdAt, endTimestamp)
+        revenue: import_drizzle_orm2.sql`SUM(${payments.amount})`,
+        transactions: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(payments).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(payments.status, "completed"),
+        (0, import_drizzle_orm2.gte)(payments.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(payments.createdAt, endTimestamp)
       )).groupBy(payments.paymentMethod);
       const recentPayments = await db.select({
         id: payments.id,
@@ -1878,17 +1894,17 @@ async function registerRoutes(app2, httpServer, io) {
           name: users.name,
           email: users.email
         }
-      }).from(payments).leftJoin(users, eq(payments.userId, users.id)).orderBy(payments.createdAt).limit(50);
+      }).from(payments).leftJoin(users, (0, import_drizzle_orm2.eq)(payments.userId, users.id)).orderBy(payments.createdAt).limit(50);
       const activeSubscriptions = await db.select({
-        count: sql2`COUNT(*)`
-      }).from(userSubscriptions).where(eq(userSubscriptions.status, "active"));
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(userSubscriptions).where((0, import_drizzle_orm2.eq)(userSubscriptions.status, "active"));
       const subscriptionRevenue = await db.select({
-        revenue: sql2`SUM(${subscriptionPlans.price})`,
-        subscriptions: sql2`COUNT(*)`
-      }).from(userSubscriptions).leftJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id)).where(and(
-        eq(userSubscriptions.status, "active"),
-        gte(userSubscriptions.createdAt, startTimestamp),
-        lte(userSubscriptions.createdAt, endTimestamp)
+        revenue: import_drizzle_orm2.sql`SUM(${subscriptionPlans.price})`,
+        subscriptions: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(userSubscriptions).leftJoin(subscriptionPlans, (0, import_drizzle_orm2.eq)(userSubscriptions.planId, subscriptionPlans.id)).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(userSubscriptions.status, "active"),
+        (0, import_drizzle_orm2.gte)(userSubscriptions.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(userSubscriptions.createdAt, endTimestamp)
       ));
       res.json({
         overview: {
@@ -1918,18 +1934,18 @@ async function registerRoutes(app2, httpServer, io) {
       const offsetNum = parseInt(offset, 10);
       let conditions = [];
       if (status) {
-        conditions.push(eq(payments.status, status));
+        conditions.push((0, import_drizzle_orm2.eq)(payments.status, status));
       }
       if (userId) {
-        conditions.push(eq(payments.userId, userId));
+        conditions.push((0, import_drizzle_orm2.eq)(payments.userId, userId));
       }
       if (startDate) {
-        conditions.push(gte(payments.createdAt, Math.floor(new Date(startDate).getTime() / 1e3)));
+        conditions.push((0, import_drizzle_orm2.gte)(payments.createdAt, Math.floor(new Date(startDate).getTime() / 1e3)));
       }
       if (endDate) {
-        conditions.push(lte(payments.createdAt, Math.floor(new Date(endDate).getTime() / 1e3)));
+        conditions.push((0, import_drizzle_orm2.lte)(payments.createdAt, Math.floor(new Date(endDate).getTime() / 1e3)));
       }
-      const whereCondition = conditions.length > 0 ? and(...conditions) : void 0;
+      const whereCondition = conditions.length > 0 ? (0, import_drizzle_orm2.and)(...conditions) : void 0;
       const paymentsList = await db.select({
         id: payments.id,
         userId: payments.userId,
@@ -1945,9 +1961,9 @@ async function registerRoutes(app2, httpServer, io) {
           name: users.name,
           email: users.email
         }
-      }).from(payments).leftJoin(users, eq(payments.userId, users.id)).where(whereCondition).orderBy(payments.createdAt).limit(limitNum).offset(offsetNum);
+      }).from(payments).leftJoin(users, (0, import_drizzle_orm2.eq)(payments.userId, users.id)).where(whereCondition).orderBy(payments.createdAt).limit(limitNum).offset(offsetNum);
       const totalResult = await db.select({
-        count: sql2`COUNT(*)`
+        count: import_drizzle_orm2.sql`COUNT(*)`
       }).from(payments).where(whereCondition);
       res.json({
         payments: paymentsList,
@@ -1967,27 +1983,27 @@ async function registerRoutes(app2, httpServer, io) {
       const endTimestamp = endDate ? Math.floor(new Date(endDate).getTime() / 1e3) : Math.floor(Date.now() / 1e3);
       const statusBreakdown = await db.select({
         status: userSubscriptions.status,
-        count: sql2`COUNT(*)`
-      }).from(userSubscriptions).where(and(
-        gte(userSubscriptions.createdAt, startTimestamp),
-        lte(userSubscriptions.createdAt, endTimestamp)
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(userSubscriptions).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.gte)(userSubscriptions.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(userSubscriptions.createdAt, endTimestamp)
       )).groupBy(userSubscriptions.status);
       const popularPlans = await db.select({
         planId: subscriptionPlans.id,
         planName: subscriptionPlans.name,
         price: subscriptionPlans.price,
         currency: subscriptionPlans.currency,
-        count: sql2`COUNT(*)`,
-        revenue: sql2`SUM(${subscriptionPlans.price})`
-      }).from(userSubscriptions).leftJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id)).where(and(
-        eq(userSubscriptions.status, "active"),
-        gte(userSubscriptions.createdAt, startTimestamp),
-        lte(userSubscriptions.createdAt, endTimestamp)
-      )).groupBy(subscriptionPlans.id, subscriptionPlans.name, subscriptionPlans.price, subscriptionPlans.currency).orderBy(sql2`COUNT(*) DESC`);
+        count: import_drizzle_orm2.sql`COUNT(*)`,
+        revenue: import_drizzle_orm2.sql`SUM(${subscriptionPlans.price})`
+      }).from(userSubscriptions).leftJoin(subscriptionPlans, (0, import_drizzle_orm2.eq)(userSubscriptions.planId, subscriptionPlans.id)).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(userSubscriptions.status, "active"),
+        (0, import_drizzle_orm2.gte)(userSubscriptions.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(userSubscriptions.createdAt, endTimestamp)
+      )).groupBy(subscriptionPlans.id, subscriptionPlans.name, subscriptionPlans.price, subscriptionPlans.currency).orderBy(import_drizzle_orm2.sql`COUNT(*) DESC`);
       const churnData = await db.select({
         status: userSubscriptions.status,
-        count: sql2`COUNT(*)`
-      }).from(userSubscriptions).where(gte(userSubscriptions.updatedAt, startTimestamp)).groupBy(userSubscriptions.status);
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(userSubscriptions).where((0, import_drizzle_orm2.gte)(userSubscriptions.updatedAt, startTimestamp)).groupBy(userSubscriptions.status);
       res.json({
         statusBreakdown,
         popularPlans,
@@ -2008,9 +2024,9 @@ async function registerRoutes(app2, httpServer, io) {
       const overdueSubscriptions = await db.select({
         userId: userSubscriptions.userId,
         endDate: userSubscriptions.endDate
-      }).from(userSubscriptions).where(and(
-        eq(userSubscriptions.status, "active"),
-        lte(userSubscriptions.endDate, now)
+      }).from(userSubscriptions).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(userSubscriptions.status, "active"),
+        (0, import_drizzle_orm2.lte)(userSubscriptions.endDate, now)
       ));
       if (overdueSubscriptions.length === 0) {
         return res.json([]);
@@ -2020,7 +2036,7 @@ async function registerRoutes(app2, httpServer, io) {
         id: users.id,
         name: users.name,
         email: users.email
-      }).from(users).where(inArray(users.id, userIds));
+      }).from(users).where((0, import_drizzle_orm2.inArray)(users.id, userIds));
       const overdueStudents = userDetails.map((user) => {
         const subscription = overdueSubscriptions.find((sub) => sub.userId === user.id);
         const daysOverdue = subscription ? Math.floor((now - subscription.endDate) / (24 * 60 * 60)) : 0;
@@ -2045,15 +2061,15 @@ async function registerRoutes(app2, httpServer, io) {
       const endTimestamp = endDate ? Math.floor(new Date(endDate).getTime() / 1e3) : Math.floor(Date.now() / 1e3);
       const usersByRole = await db.select({
         role: users.role,
-        count: sql2`COUNT(*)`
+        count: import_drizzle_orm2.sql`COUNT(*)`
       }).from(users).groupBy(users.role);
       const registrationTrends = await db.select({
-        date: sql2`DATE(${users.createdAt}, 'unixepoch')`,
-        count: sql2`COUNT(*)`
-      }).from(users).where(and(
-        gte(users.createdAt, startTimestamp),
-        lte(users.createdAt, endTimestamp)
-      )).groupBy(sql2`DATE(${users.createdAt}, 'unixepoch')`).orderBy(sql2`DATE(${users.createdAt}, 'unixepoch')`);
+        date: import_drizzle_orm2.sql`DATE(${users.createdAt}, 'unixepoch')`,
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(users).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.gte)(users.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(users.createdAt, endTimestamp)
+      )).groupBy(import_drizzle_orm2.sql`DATE(${users.createdAt}, 'unixepoch')`).orderBy(import_drizzle_orm2.sql`DATE(${users.createdAt}, 'unixepoch')`);
       const recentUsers = await db.select({
         id: users.id,
         username: users.username,
@@ -2083,17 +2099,17 @@ async function registerRoutes(app2, httpServer, io) {
         courseName: courses.name,
         courseCode: courses.code,
         lecturerName: courses.lecturerName,
-        enrollmentCount: sql2`COUNT(DISTINCT ${userTutors.studentId})`
-      }).from(courses).leftJoin(userTutors, eq(courses.id, userTutors.courseId)).groupBy(courses.id, courses.name, courses.code, courses.lecturerName).orderBy(sql2`COUNT(DISTINCT ${userTutors.studentId}) DESC`).limit(10);
+        enrollmentCount: import_drizzle_orm2.sql`COUNT(DISTINCT ${userTutors.studentId})`
+      }).from(courses).leftJoin(userTutors, (0, import_drizzle_orm2.eq)(courses.id, userTutors.courseId)).groupBy(courses.id, courses.name, courses.code, courses.lecturerName).orderBy(import_drizzle_orm2.sql`COUNT(DISTINCT ${userTutors.studentId}) DESC`).limit(10);
       const coursesByCategory = await db.select({
         category: courses.category,
-        count: sql2`COUNT(*)`
+        count: import_drizzle_orm2.sql`COUNT(*)`
       }).from(courses).groupBy(courses.category);
       const totalStats = await db.select({
-        totalCourses: sql2`COUNT(DISTINCT ${courses.id})`,
-        totalEnrollments: sql2`COUNT(DISTINCT ${userTutors.studentId})`,
-        activeTutors: sql2`COUNT(DISTINCT ${userTutors.tutorId})`
-      }).from(courses).leftJoin(userTutors, eq(courses.id, userTutors.courseId)).where(eq(userTutors.status, "active"));
+        totalCourses: import_drizzle_orm2.sql`COUNT(DISTINCT ${courses.id})`,
+        totalEnrollments: import_drizzle_orm2.sql`COUNT(DISTINCT ${userTutors.studentId})`,
+        activeTutors: import_drizzle_orm2.sql`COUNT(DISTINCT ${userTutors.tutorId})`
+      }).from(courses).leftJoin(userTutors, (0, import_drizzle_orm2.eq)(courses.id, userTutors.courseId)).where((0, import_drizzle_orm2.eq)(userTutors.status, "active"));
       res.json({
         popularCourses: coursePopularity,
         coursesByCategory,
@@ -2115,17 +2131,17 @@ async function registerRoutes(app2, httpServer, io) {
       const endTimestamp = endDate ? Math.floor(new Date(endDate).getTime() / 1e3) : Math.floor(Date.now() / 1e3);
       const requestsByStatus = await db.select({
         status: supportRequests.status,
-        count: sql2`COUNT(*)`
-      }).from(supportRequests).where(and(
-        gte(supportRequests.createdAt, startTimestamp),
-        lte(supportRequests.createdAt, endTimestamp)
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(supportRequests).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.gte)(supportRequests.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(supportRequests.createdAt, endTimestamp)
       )).groupBy(supportRequests.status);
       const requestsByType = await db.select({
         type: supportRequests.type,
-        count: sql2`COUNT(*)`
-      }).from(supportRequests).where(and(
-        gte(supportRequests.createdAt, startTimestamp),
-        lte(supportRequests.createdAt, endTimestamp)
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(supportRequests).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.gte)(supportRequests.createdAt, startTimestamp),
+        (0, import_drizzle_orm2.lte)(supportRequests.createdAt, endTimestamp)
       )).groupBy(supportRequests.type);
       const recentRequests = await db.select({
         id: supportRequests.id,
@@ -2137,10 +2153,10 @@ async function registerRoutes(app2, httpServer, io) {
           name: users.name,
           email: users.email
         }
-      }).from(supportRequests).leftJoin(users, eq(supportRequests.userId, users.id)).orderBy(supportRequests.createdAt).limit(5);
+      }).from(supportRequests).leftJoin(users, (0, import_drizzle_orm2.eq)(supportRequests.userId, users.id)).orderBy(supportRequests.createdAt).limit(5);
       const unresolvedCount = await db.select({
-        count: sql2`COUNT(*)`
-      }).from(supportRequests).where(ne(supportRequests.status, "resolved"));
+        count: import_drizzle_orm2.sql`COUNT(*)`
+      }).from(supportRequests).where((0, import_drizzle_orm2.ne)(supportRequests.status, "resolved"));
       res.json({
         requestsByStatus,
         requestsByType,
@@ -2181,7 +2197,7 @@ async function registerRoutes(app2, httpServer, io) {
       }
       const assignedBy = userId;
       const newAssignment = await db.insert(userTutors).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         studentId,
         tutorId,
         courseId,
@@ -2194,7 +2210,7 @@ async function registerRoutes(app2, httpServer, io) {
     }
   });
   app2.delete("/api/admin/tutors/:id", authenticateToken, async (req, res) => {
-    const user = await db.select().from(users).where(eq(users.id, req.user.userId)).limit(1);
+    const user = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.id, req.user.userId)).limit(1);
     if (user.length === 0) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -2204,14 +2220,14 @@ async function registerRoutes(app2, httpServer, io) {
       const { id } = req.params;
       const userId2 = req.user.userId;
       const userRole2 = req.userDetails.role;
-      const assignment = await db.select().from(userTutors).where(eq(userTutors.id, id)).limit(1);
+      const assignment = await db.select().from(userTutors).where((0, import_drizzle_orm2.eq)(userTutors.id, id)).limit(1);
       if (assignment.length === 0) {
         return res.status(404).json({ error: "Assignment not found" });
       }
       if (userRole2 !== "admin" && !(userRole2 === "tutor" && assignment[0].tutorId === userId2)) {
         return res.status(403).json({ error: "Access denied" });
       }
-      await db.delete(userTutors).where(eq(userTutors.id, id));
+      await db.delete(userTutors).where((0, import_drizzle_orm2.eq)(userTutors.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Delete tutor assignment error:", error);
@@ -2234,10 +2250,10 @@ async function registerRoutes(app2, httpServer, io) {
         },
         assignedAt: userTutors.assignedAt,
         status: userTutors.status
-      }).from(userTutors).leftJoin(users, eq(userTutors.tutorId, users.id)).leftJoin(courses, eq(userTutors.courseId, courses.id)).where(and(eq(userTutors.studentId, studentId), eq(userTutors.status, "active")));
-      const debugRequests = await db.select().from(tutorRequests).where(eq(tutorRequests.studentId, studentId));
+      }).from(userTutors).leftJoin(users, (0, import_drizzle_orm2.eq)(userTutors.tutorId, users.id)).leftJoin(courses, (0, import_drizzle_orm2.eq)(userTutors.courseId, courses.id)).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(userTutors.studentId, studentId), (0, import_drizzle_orm2.eq)(userTutors.status, "active")));
+      const debugRequests = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.studentId, studentId));
       console.log("All tutor requests for student", studentId, ":", debugRequests);
-      const allRequests = await db.select().from(tutorRequests).where(eq(tutorRequests.studentId, studentId));
+      const allRequests = await db.select().from(tutorRequests).where((0, import_drizzle_orm2.eq)(tutorRequests.studentId, studentId));
       console.log("All requests for student", studentId, ":", allRequests);
       res.json({ assignedTutors, requests: allRequests });
     } catch (error) {
@@ -2264,7 +2280,7 @@ async function registerRoutes(app2, httpServer, io) {
           capture_method: "automatic"
         });
         const payment = await db.insert(payments).values({
-          id: randomUUID(),
+          id: (0, import_crypto.randomUUID)(),
           userId,
           subscriptionId,
           amount,
@@ -2288,9 +2304,9 @@ async function registerRoutes(app2, httpServer, io) {
         const { paymentId } = req.params;
         const { paymentIntentId } = req.body;
         const userId = req.user.userId;
-        const payment = await db.select().from(payments).where(and(
-          eq(payments.id, paymentId),
-          eq(payments.userId, userId)
+        const payment = await db.select().from(payments).where((0, import_drizzle_orm2.and)(
+          (0, import_drizzle_orm2.eq)(payments.id, paymentId),
+          (0, import_drizzle_orm2.eq)(payments.userId, userId)
         )).limit(1);
         if (payment.length === 0) {
           return res.status(404).json({ error: "Payment not found" });
@@ -2302,12 +2318,12 @@ async function registerRoutes(app2, httpServer, io) {
           status: newStatus,
           transactionId: paymentIntent.id,
           updatedAt: now
-        }).where(eq(payments.id, paymentId));
+        }).where((0, import_drizzle_orm2.eq)(payments.id, paymentId));
         if (newStatus === "completed") {
           if (payment[0].subscriptionId) {
             await db.update(userSubscriptions).set({
               status: "active"
-            }).where(eq(userSubscriptions.id, payment[0].subscriptionId));
+            }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, payment[0].subscriptionId));
           }
           await createNotification(userId, "payment_success", "Payment Successful", `Your payment of ${(payment[0].amount / 100).toFixed(2)} has been processed successfully.`, { paymentId });
         } else if (newStatus === "failed") {
@@ -2336,7 +2352,7 @@ async function registerRoutes(app2, httpServer, io) {
             const paymentIntent = event.data.object;
             console.log("Payment succeeded:", paymentIntent.id);
             const now = Math.floor(Date.now() / 1e3);
-            const paymentsToUpdate = await db.select().from(payments).where(eq(payments.transactionId, paymentIntent.id));
+            const paymentsToUpdate = await db.select().from(payments).where((0, import_drizzle_orm2.eq)(payments.transactionId, paymentIntent.id));
             for (const payment of paymentsToUpdate) {
               if (!payment.userId) {
                 console.error("Payment has no userId:", payment.id);
@@ -2345,11 +2361,11 @@ async function registerRoutes(app2, httpServer, io) {
               await db.update(payments).set({
                 status: "completed",
                 updatedAt: now
-              }).where(eq(payments.id, payment.id));
+              }).where((0, import_drizzle_orm2.eq)(payments.id, payment.id));
               if (payment.subscriptionId) {
                 await db.update(userSubscriptions).set({
                   status: "active"
-                }).where(eq(userSubscriptions.id, payment.subscriptionId));
+                }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, payment.subscriptionId));
               }
               await createNotification(payment.userId, "payment_success", "Payment Successful", `Your payment of ${(payment.amount / 100).toFixed(2)} has been processed successfully.`, { paymentId: payment.id });
             }
@@ -2379,7 +2395,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { limit = "20", offset = "0" } = req.query;
       const limitNum = parseInt(limit, 10);
       const offsetNum = parseInt(offset, 10);
-      const userPayments = await db.select().from(payments).where(eq(payments.userId, userId)).orderBy(payments.createdAt).limit(limitNum).offset(offsetNum);
+      const userPayments = await db.select().from(payments).where((0, import_drizzle_orm2.eq)(payments.userId, userId)).orderBy(payments.createdAt).limit(limitNum).offset(offsetNum);
       res.json(userPayments);
     } catch (error) {
       console.error("Get payments error:", error);
@@ -2390,7 +2406,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const userId = req.user.userId;
-      const payment = await db.select().from(payments).where(and(eq(payments.id, id), eq(payments.userId, userId))).limit(1);
+      const payment = await db.select().from(payments).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(payments.id, id), (0, import_drizzle_orm2.eq)(payments.userId, userId))).limit(1);
       if (payment.length === 0) {
         return res.status(404).json({ error: "Payment not found" });
       }
@@ -2407,7 +2423,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (!stripe) {
         return res.status(400).json({ error: "Payment processing not configured" });
       }
-      const payment = await db.select().from(payments).where(eq(payments.id, id)).limit(1);
+      const payment = await db.select().from(payments).where((0, import_drizzle_orm2.eq)(payments.id, id)).limit(1);
       if (payment.length === 0) {
         return res.status(404).json({ error: "Payment not found" });
       }
@@ -2422,11 +2438,11 @@ async function registerRoutes(app2, httpServer, io) {
       });
       await db.update(payments).set({
         status: refund.amount === payment[0].amount * 100 ? "refunded" : "partially_refunded"
-      }).where(eq(payments.id, id));
+      }).where((0, import_drizzle_orm2.eq)(payments.id, id));
       if (payment[0].subscriptionId) {
         await db.update(userSubscriptions).set({
           status: "cancelled"
-        }).where(eq(userSubscriptions.id, payment[0].subscriptionId));
+        }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, payment[0].subscriptionId));
       }
       res.json({ success: true, refundId: refund.id });
     } catch (error) {
@@ -2440,7 +2456,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { limit = "20", offset = "0" } = req.query;
       const limitNum = parseInt(limit, 10);
       const offsetNum = parseInt(offset, 10);
-      const userNotifications = await db.select().from(notifications).where(eq(notifications.userId, userId)).orderBy(notifications.createdAt).limit(limitNum).offset(offsetNum);
+      const userNotifications = await db.select().from(notifications).where((0, import_drizzle_orm2.eq)(notifications.userId, userId)).orderBy(notifications.createdAt).limit(limitNum).offset(offsetNum);
       res.json(userNotifications);
     } catch (error) {
       console.error("Get notifications error:", error);
@@ -2451,11 +2467,11 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const userId = req.user.userId;
-      const notification = await db.select().from(notifications).where(and(eq(notifications.id, id), eq(notifications.userId, userId))).limit(1);
+      const notification = await db.select().from(notifications).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(notifications.id, id), (0, import_drizzle_orm2.eq)(notifications.userId, userId))).limit(1);
       if (notification.length === 0) {
         return res.status(404).json({ error: "Notification not found" });
       }
-      await db.update(notifications).set({ isRead: 1 }).where(eq(notifications.id, id));
+      await db.update(notifications).set({ isRead: 1 }).where((0, import_drizzle_orm2.eq)(notifications.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Mark notification read error:", error);
@@ -2465,7 +2481,7 @@ async function registerRoutes(app2, httpServer, io) {
   app2.get("/api/payment-methods", authenticateToken, async (req, res) => {
     try {
       const userId = req.user.userId;
-      const methods = await db.select().from(paymentMethods).where(eq(paymentMethods.userId, userId)).orderBy(paymentMethods.createdAt);
+      const methods = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.eq)(paymentMethods.userId, userId)).orderBy(paymentMethods.createdAt);
       res.json(methods);
     } catch (error) {
       console.error("Get payment methods error:", error);
@@ -2481,7 +2497,7 @@ async function registerRoutes(app2, httpServer, io) {
       }
       let stripeCustomerId;
       if (stripePaymentMethodId) {
-        const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+        const user = await db.select().from(users).where((0, import_drizzle_orm2.eq)(users.id, userId)).limit(1);
         if (user.length === 0) {
           return res.status(404).json({ error: "User not found" });
         }
@@ -2500,7 +2516,7 @@ async function registerRoutes(app2, httpServer, io) {
         }
       }
       const newMethod = await db.insert(paymentMethods).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         userId,
         type: type || "card",
         provider: provider || "stripe",
@@ -2510,9 +2526,9 @@ async function registerRoutes(app2, httpServer, io) {
         isDefault: 0
         // Will be set to default if it's the first method
       }).returning();
-      const existingMethods = await db.select().from(paymentMethods).where(eq(paymentMethods.userId, userId));
+      const existingMethods = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.eq)(paymentMethods.userId, userId));
       if (existingMethods.length === 1) {
-        await db.update(paymentMethods).set({ isDefault: 1 }).where(eq(paymentMethods.id, newMethod[0].id));
+        await db.update(paymentMethods).set({ isDefault: 1 }).where((0, import_drizzle_orm2.eq)(paymentMethods.id, newMethod[0].id));
       }
       res.json(newMethod[0]);
     } catch (error) {
@@ -2525,7 +2541,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { id } = req.params;
       const { last4, expiryMonth, expiryYear } = req.body;
       const userId = req.user.userId;
-      const method = await db.select().from(paymentMethods).where(and(eq(paymentMethods.id, id), eq(paymentMethods.userId, userId))).limit(1);
+      const method = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(paymentMethods.id, id), (0, import_drizzle_orm2.eq)(paymentMethods.userId, userId))).limit(1);
       if (method.length === 0) {
         return res.status(404).json({ error: "Payment method not found" });
       }
@@ -2533,7 +2549,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (last4 !== void 0) updateData.last4 = last4;
       if (expiryMonth !== void 0) updateData.expiryMonth = expiryMonth;
       if (expiryYear !== void 0) updateData.expiryYear = expiryYear;
-      const updatedMethod = await db.update(paymentMethods).set(updateData).where(eq(paymentMethods.id, id)).returning();
+      const updatedMethod = await db.update(paymentMethods).set(updateData).where((0, import_drizzle_orm2.eq)(paymentMethods.id, id)).returning();
       res.json(updatedMethod[0]);
     } catch (error) {
       console.error("Update payment method error:", error);
@@ -2544,15 +2560,15 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const userId = req.user.userId;
-      const method = await db.select().from(paymentMethods).where(and(eq(paymentMethods.id, id), eq(paymentMethods.userId, userId))).limit(1);
+      const method = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(paymentMethods.id, id), (0, import_drizzle_orm2.eq)(paymentMethods.userId, userId))).limit(1);
       if (method.length === 0) {
         return res.status(404).json({ error: "Payment method not found" });
       }
-      await db.delete(paymentMethods).where(eq(paymentMethods.id, id));
+      await db.delete(paymentMethods).where((0, import_drizzle_orm2.eq)(paymentMethods.id, id));
       if (method[0].isDefault) {
-        const remainingMethods = await db.select().from(paymentMethods).where(eq(paymentMethods.userId, userId)).orderBy(paymentMethods.createdAt).limit(1);
+        const remainingMethods = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.eq)(paymentMethods.userId, userId)).orderBy(paymentMethods.createdAt).limit(1);
         if (remainingMethods.length > 0) {
-          await db.update(paymentMethods).set({ isDefault: 1 }).where(eq(paymentMethods.id, remainingMethods[0].id));
+          await db.update(paymentMethods).set({ isDefault: 1 }).where((0, import_drizzle_orm2.eq)(paymentMethods.id, remainingMethods[0].id));
         }
       }
       res.json({ success: true });
@@ -2565,12 +2581,12 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const userId = req.user.userId;
-      const method = await db.select().from(paymentMethods).where(and(eq(paymentMethods.id, id), eq(paymentMethods.userId, userId))).limit(1);
+      const method = await db.select().from(paymentMethods).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(paymentMethods.id, id), (0, import_drizzle_orm2.eq)(paymentMethods.userId, userId))).limit(1);
       if (method.length === 0) {
         return res.status(404).json({ error: "Payment method not found" });
       }
-      await db.update(paymentMethods).set({ isDefault: 0 }).where(eq(paymentMethods.userId, userId));
-      await db.update(paymentMethods).set({ isDefault: 1 }).where(eq(paymentMethods.id, id));
+      await db.update(paymentMethods).set({ isDefault: 0 }).where((0, import_drizzle_orm2.eq)(paymentMethods.userId, userId));
+      await db.update(paymentMethods).set({ isDefault: 1 }).where((0, import_drizzle_orm2.eq)(paymentMethods.id, id));
       res.json({ success: true });
     } catch (error) {
       console.error("Set default payment method error:", error);
@@ -2579,7 +2595,7 @@ async function registerRoutes(app2, httpServer, io) {
   });
   app2.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.isActive, 1));
+      const plans = await db.select().from(subscriptionPlans).where((0, import_drizzle_orm2.eq)(subscriptionPlans.isActive, 1));
       res.json(plans);
     } catch (error) {
       console.error("Get subscription plans error:", error);
@@ -2607,9 +2623,9 @@ async function registerRoutes(app2, httpServer, io) {
           duration: subscriptionPlans.duration,
           features: subscriptionPlans.features
         }
-      }).from(userSubscriptions).leftJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id)).where(and(
-        eq(userSubscriptions.userId, userId),
-        eq(userSubscriptions.status, "active")
+      }).from(userSubscriptions).leftJoin(subscriptionPlans, (0, import_drizzle_orm2.eq)(userSubscriptions.planId, subscriptionPlans.id)).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(userSubscriptions.userId, userId),
+        (0, import_drizzle_orm2.eq)(userSubscriptions.status, "active")
       )).orderBy(userSubscriptions.createdAt).limit(1);
       if (subscription.length === 0) {
         return res.json({ subscription: null, isActive: false });
@@ -2632,13 +2648,13 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { planId } = req.body;
       const userId = req.user.userId;
-      const plan = await db.select().from(subscriptionPlans).where(and(eq(subscriptionPlans.id, planId), eq(subscriptionPlans.isActive, 1))).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(subscriptionPlans.id, planId), (0, import_drizzle_orm2.eq)(subscriptionPlans.isActive, 1))).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({ error: "Subscription plan not found" });
       }
-      const existingSub = await db.select().from(userSubscriptions).where(and(
-        eq(userSubscriptions.userId, userId),
-        eq(userSubscriptions.status, "active")
+      const existingSub = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(userSubscriptions.userId, userId),
+        (0, import_drizzle_orm2.eq)(userSubscriptions.status, "active")
       )).limit(1);
       if (existingSub.length > 0) {
         return res.status(400).json({ error: "User already has an active subscription" });
@@ -2646,7 +2662,7 @@ async function registerRoutes(app2, httpServer, io) {
       const now = Math.floor(Date.now() / 1e3);
       const endDate = now + plan[0].duration * 24 * 60 * 60;
       const newSubscription = await db.insert(userSubscriptions).values({
-        id: randomUUID(),
+        id: (0, import_crypto.randomUUID)(),
         userId,
         planId,
         status: "active",
@@ -2665,14 +2681,14 @@ async function registerRoutes(app2, httpServer, io) {
       const { id } = req.params;
       const { status, autoRenew } = req.body;
       const userId = req.user.userId;
-      const subscription = await db.select().from(userSubscriptions).where(eq(userSubscriptions.id, id)).limit(1);
+      const subscription = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id)).limit(1);
       if (subscription.length === 0 || subscription[0].userId !== userId) {
         return res.status(404).json({ error: "Subscription not found" });
       }
       const updateData = { updatedAt: Math.floor(Date.now() / 1e3) };
       if (status !== void 0) updateData.status = status;
       if (autoRenew !== void 0) updateData.autoRenew = autoRenew ? 1 : 0;
-      const updatedSubscription = await db.update(userSubscriptions).set(updateData).where(eq(userSubscriptions.id, id)).returning();
+      const updatedSubscription = await db.update(userSubscriptions).set(updateData).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id)).returning();
       res.json(updatedSubscription[0]);
     } catch (error) {
       console.error("Update subscription error:", error);
@@ -2684,7 +2700,7 @@ async function registerRoutes(app2, httpServer, io) {
       const { id } = req.params;
       const { cancelAtPeriodEnd = false, reason } = req.body;
       const userId = req.user.userId;
-      const subscription = await db.select().from(userSubscriptions).where(eq(userSubscriptions.id, id)).limit(1);
+      const subscription = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id)).limit(1);
       if (subscription.length === 0 || subscription[0].userId !== userId) {
         return res.status(404).json({ error: "Subscription not found" });
       }
@@ -2692,13 +2708,13 @@ async function registerRoutes(app2, httpServer, io) {
         await db.update(userSubscriptions).set({
           autoRenew: 0,
           updatedAt: Math.floor(Date.now() / 1e3)
-        }).where(eq(userSubscriptions.id, id));
+        }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id));
       } else {
         await db.update(userSubscriptions).set({
           status: "cancelled",
           autoRenew: 0,
           updatedAt: Math.floor(Date.now() / 1e3)
-        }).where(eq(userSubscriptions.id, id));
+        }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id));
       }
       res.json({ success: true, cancelAtPeriodEnd });
     } catch (error) {
@@ -2710,7 +2726,7 @@ async function registerRoutes(app2, httpServer, io) {
     try {
       const { id } = req.params;
       const userId = req.user.userId;
-      const subscription = await db.select().from(userSubscriptions).where(and(eq(userSubscriptions.id, id), eq(userSubscriptions.userId, userId))).limit(1);
+      const subscription = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(userSubscriptions.id, id), (0, import_drizzle_orm2.eq)(userSubscriptions.userId, userId))).limit(1);
       if (subscription.length === 0) {
         return res.status(404).json({ error: "Subscription not found" });
       }
@@ -2721,7 +2737,7 @@ async function registerRoutes(app2, httpServer, io) {
       if (!sub.planId) {
         return res.status(400).json({ error: "Subscription has no plan" });
       }
-      const plan = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, sub.planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where((0, import_drizzle_orm2.eq)(subscriptionPlans.id, sub.planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({ error: "Subscription plan not found" });
       }
@@ -2733,7 +2749,7 @@ async function registerRoutes(app2, httpServer, io) {
         endDate,
         autoRenew: 1,
         updatedAt: now
-      }).where(eq(userSubscriptions.id, id));
+      }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id));
       res.json({ success: true, endDate });
     } catch (error) {
       console.error("Renew subscription error:", error);
@@ -2745,13 +2761,13 @@ async function registerRoutes(app2, httpServer, io) {
       const { id } = req.params;
       const { newPlanId } = req.body;
       const userId = req.user.userId;
-      const subscription = await db.select().from(userSubscriptions).where(and(eq(userSubscriptions.id, id), eq(userSubscriptions.userId, userId))).limit(1);
+      const subscription = await db.select().from(userSubscriptions).where((0, import_drizzle_orm2.and)((0, import_drizzle_orm2.eq)(userSubscriptions.id, id), (0, import_drizzle_orm2.eq)(userSubscriptions.userId, userId))).limit(1);
       if (subscription.length === 0) {
         return res.status(404).json({ error: "Subscription not found" });
       }
-      const newPlan = await db.select().from(subscriptionPlans).where(and(
-        eq(subscriptionPlans.id, newPlanId),
-        eq(subscriptionPlans.isActive, 1)
+      const newPlan = await db.select().from(subscriptionPlans).where((0, import_drizzle_orm2.and)(
+        (0, import_drizzle_orm2.eq)(subscriptionPlans.id, newPlanId),
+        (0, import_drizzle_orm2.eq)(subscriptionPlans.isActive, 1)
       )).limit(1);
       if (newPlan.length === 0) {
         return res.status(404).json({ error: "New subscription plan not found" });
@@ -2763,7 +2779,7 @@ async function registerRoutes(app2, httpServer, io) {
         startDate: now,
         endDate: newEndDate,
         updatedAt: now
-      }).where(eq(userSubscriptions.id, id));
+      }).where((0, import_drizzle_orm2.eq)(userSubscriptions.id, id));
       res.json({
         success: true,
         newPlan: newPlan[0],
@@ -2795,23 +2811,23 @@ async function registerRoutes(app2, httpServer, io) {
           currency: subscriptionPlans.currency,
           duration: subscriptionPlans.duration
         }
-      }).from(userSubscriptions).leftJoin(subscriptionPlans, eq(userSubscriptions.planId, subscriptionPlans.id)).where(eq(userSubscriptions.userId, userId)).orderBy(userSubscriptions.createdAt).limit(limitNum).offset(offsetNum);
+      }).from(userSubscriptions).leftJoin(subscriptionPlans, (0, import_drizzle_orm2.eq)(userSubscriptions.planId, subscriptionPlans.id)).where((0, import_drizzle_orm2.eq)(userSubscriptions.userId, userId)).orderBy(userSubscriptions.createdAt).limit(limitNum).offset(offsetNum);
       res.json(subscriptions);
     } catch (error) {
       console.error("Get subscription history error:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
-  return { server: httpServer || createServer(app2), processPaymentRetries };
+  return { server: httpServer || (0, import_node_http.createServer)(app2), processPaymentRetries };
 }
 
 // server/index.ts
-import { createServer as createServer2 } from "node:http";
-import { Server as SocketServer } from "socket.io";
-import * as fs2 from "fs";
-import * as path2 from "path";
-import { eq as eq2 } from "drizzle-orm";
-var app = express();
+var import_node_http2 = require("node:http");
+var import_socket = require("socket.io");
+var fs2 = __toESM(require("fs"));
+var path2 = __toESM(require("path"));
+var import_drizzle_orm3 = require("drizzle-orm");
+var app = (0, import_express.default)();
 app.set("etag", false);
 var log = console.log;
 function setupCors(app2) {
@@ -2832,13 +2848,13 @@ function setupCors(app2) {
 }
 function setupBodyParsing(app2) {
   app2.use(
-    express.json({
+    import_express.default.json({
       verify: (req, _res, buf) => {
         req.rawBody = buf;
       }
     })
   );
-  app2.use(express.urlencoded({ extended: false }));
+  app2.use(import_express.default.urlencoded({ extended: false }));
 }
 function setupRequestLogging(app2) {
   app2.use((req, res, next) => {
@@ -2933,12 +2949,12 @@ function configureExpoAndLanding(app2) {
     }
     next();
   });
-  app2.use("/assets", express.static(path2.resolve(process.cwd(), "assets")));
-  app2.use(express.static(path2.resolve(process.cwd(), "static-build")));
+  app2.use("/assets", import_express.default.static(path2.resolve(process.cwd(), "assets")));
+  app2.use(import_express.default.static(path2.resolve(process.cwd(), "dist")));
   log("Expo routing: Checking expo-platform header on / and /manifest");
 }
 function setupSocketIO(httpServer) {
-  const io = new SocketServer(httpServer, {
+  const io = new import_socket.Server(httpServer, {
     cors: {
       origin: "*",
       methods: ["GET", "POST"]
@@ -2948,7 +2964,7 @@ function setupSocketIO(httpServer) {
     log(`Socket connected: ${socket.id}`);
     socket.on("join-live-class", async (data) => {
       try {
-        const session = await db.select().from(liveSessions).where(eq2(liveSessions.id, data.sessionId)).limit(1);
+        const session = await db.select().from(liveSessions).where((0, import_drizzle_orm3.eq)(liveSessions.id, data.sessionId)).limit(1);
         if (session.length === 0 || session[0].isLive === 0) {
           console.log(`Session ${data.sessionId} is ended, rejecting join request`);
           socket.emit("session-ended", { sessionId: data.sessionId });
@@ -3077,7 +3093,7 @@ function setupErrorHandler(app2) {
   setupRequestLogging(app);
   configureExpoAndLanding(app);
   await runMigrations();
-  const httpServer = createServer2(app);
+  const httpServer = (0, import_node_http2.createServer)(app);
   const io = setupSocketIO(httpServer);
   const { server, processPaymentRetries } = await registerRoutes(app, httpServer, io);
   setupErrorHandler(app);

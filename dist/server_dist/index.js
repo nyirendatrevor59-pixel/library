@@ -2824,7 +2824,6 @@ async function registerRoutes(app2, httpServer, io) {
 // server/index.ts
 var import_node_http2 = require("node:http");
 var import_socket = require("socket.io");
-var fs2 = __toESM(require("fs"));
 var path2 = __toESM(require("path"));
 var import_drizzle_orm3 = require("drizzle-orm");
 var app = (0, import_express.default)();
@@ -2881,77 +2880,10 @@ function setupRequestLogging(app2) {
     next();
   });
 }
-function getAppName() {
-  return "Uni-Learn App";
-}
-function serveExpoManifest(platform, res) {
-  const manifestPath = path2.resolve(
-    process.cwd(),
-    "static-build",
-    platform,
-    "manifest.json"
-  );
-  if (!fs2.existsSync(manifestPath)) {
-    return res.status(404).json({ error: `Manifest not found for platform: ${platform}` });
-  }
-  res.setHeader("expo-protocol-version", "1");
-  res.setHeader("expo-sfv-version", "0");
-  res.setHeader("content-type", "application/json");
-  const manifest = fs2.readFileSync(manifestPath, "utf-8");
-  res.send(manifest);
-}
-function serveLandingPage({
-  req,
-  res,
-  landingPageTemplate,
-  appName
-}) {
-  const forwardedProto = req.header("x-forwarded-proto");
-  const protocol = forwardedProto || req.protocol || "https";
-  const forwardedHost = req.header("x-forwarded-host");
-  const host = forwardedHost || req.get("host");
-  const baseUrl = `${protocol}://${host}`;
-  const expsUrl = `${host}`;
-  log(`baseUrl`, baseUrl);
-  log(`expsUrl`, expsUrl);
-  const html = landingPageTemplate.replace(/BASE_URL_PLACEHOLDER/g, baseUrl).replace(/EXPS_URL_PLACEHOLDER/g, expsUrl).replace(/APP_NAME_PLACEHOLDER/g, appName);
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.status(200).send(html);
-}
-function configureExpoAndLanding(app2) {
-  const templatePath = path2.resolve(
-    process.cwd(),
-    "server",
-    "templates",
-    "landing-page.html"
-  );
-  const landingPageTemplate = fs2.readFileSync(templatePath, "utf-8");
-  const appName = getAppName();
-  log("Serving static Expo files with dynamic manifest routing");
-  app2.use((req, res, next) => {
-    if (req.path.startsWith("/api")) {
-      return next();
-    }
-    if (req.path !== "/" && req.path !== "/manifest") {
-      return next();
-    }
-    const platform = req.header("expo-platform");
-    if (platform && (platform === "ios" || platform === "android")) {
-      return serveExpoManifest(platform, res);
-    }
-    if (req.path === "/") {
-      return serveLandingPage({
-        req,
-        res,
-        landingPageTemplate,
-        appName
-      });
-    }
-    next();
-  });
+function configureStaticServing(app2) {
   app2.use("/assets", import_express.default.static(path2.resolve(process.cwd(), "assets")));
   app2.use(import_express.default.static(path2.resolve(process.cwd(), "dist")));
-  log("Expo routing: Checking expo-platform header on / and /manifest");
+  log("Serving static files from dist directory");
 }
 function setupSocketIO(httpServer) {
   const io = new import_socket.Server(httpServer, {
@@ -3091,7 +3023,7 @@ function setupErrorHandler(app2) {
   setupCors(app);
   setupBodyParsing(app);
   setupRequestLogging(app);
-  configureExpoAndLanding(app);
+  configureStaticServing(app);
   await runMigrations();
   const httpServer = (0, import_node_http2.createServer)(app);
   const io = setupSocketIO(httpServer);

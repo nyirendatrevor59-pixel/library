@@ -21,6 +21,7 @@ import BreakoutRooms from "@/components/BreakoutRooms";
 import VideoConference from "@/components/VideoConference";
 
 import { AVAILABLE_COURSES } from "../../lib/sampleData";
+import { API_BASE_URL } from "../../lib/api";
 
 export default function LecturerClassroomScreen() {
   const insets = useSafeAreaInsets();
@@ -53,7 +54,7 @@ export default function LecturerClassroomScreen() {
 
   const fetchMyCourses = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/courses");
+      const response = await fetch(`${API_BASE_URL}/api/courses`);
       const data = await response.json();
       // Filter courses by lecturerId
       const filteredCourses = data.filter((course: any) => course.lecturerId === user?.id);
@@ -65,7 +66,7 @@ export default function LecturerClassroomScreen() {
 
   const fetchLecturerMaterials = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/materials?lecturerId=${user?.id}`);
+      const response = await fetch(`${API_BASE_URL}/api/materials?lecturerId=${user?.id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

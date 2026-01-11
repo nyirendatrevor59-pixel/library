@@ -227,6 +227,7 @@ async function runMigrations() {
         "isLive" integer DEFAULT 0,
         "lecturerName" text,
         participants integer DEFAULT 0,
+        settings text,
         "currentDocument" text,
         "currentPage" integer DEFAULT 1,
         annotations text,

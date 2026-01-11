@@ -398,6 +398,10 @@ export default function LiveClassScreen() {
                 style={[styles.materialItem, { backgroundColor: theme.backgroundSecondary }]}
                 onPress={() => {
                   if (user?.role === 'lecturer') {
+                    if (!item.fileUrl) {
+                      Alert.alert("Cannot Share", "This sample material cannot be shared. Please upload a real document first.");
+                      return;
+                    }
                     const documentUrl = `${API_BASE_URL}${item.fileUrl}`;
                     shareDocument(session.id, {
                       id: String(item.id),

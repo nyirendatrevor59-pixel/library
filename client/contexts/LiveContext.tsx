@@ -8,6 +8,7 @@ import React, {
 import { io, Socket } from "socket.io-client";
 import { AVAILABLE_COURSES } from "@/lib/sampleData";
 import { User, storage } from "@/lib/storage";
+import { API_BASE_URL } from "@/lib/api";
 import { LiveSession as DBSession, ChatMessage as DBMessage } from "../../shared/schema";
 
 export interface LiveSession {
@@ -89,7 +90,8 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Initialize socket connection
-    const newSocket = io("http://localhost:5001");
+    const socketUrl = __DEV__ ? "http://localhost:5001" : (typeof window !== 'undefined' ? window.location.origin : "http://localhost:5001");
+    const newSocket = io(socketUrl);
     setSocket(newSocket);
 
     // Fetch initial live sessions
@@ -316,7 +318,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     try {
       const token = await storage.getToken();
-      const response = await fetch("http://localhost:5001/api/sessions", {
+      const response = await fetch(`${API_BASE_URL}/api/sessions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -351,7 +353,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
   const endLiveSession = async (sessionId: string) => {
     try {
       const token = await storage.getToken();
-      const response = await fetch(`http://localhost:5001/api/sessions/${sessionId}/end`, {
+      const response = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/end`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -459,7 +461,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     // Persist to database
     try {
-      const response = await fetch(`http://localhost:5001/api/sessions/${sessionId}/document`, {
+      const response = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/document`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -493,7 +495,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     // Persist to database
     try {
-      await fetch(`http://localhost:5001/api/sessions/${sessionId}/document`, {
+      await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/document`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -521,7 +523,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     // Persist to database
     try {
-      await fetch(`http://localhost:5001/api/sessions/${sessionId}/document`, {
+      await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/document`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -549,7 +551,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     // Persist to database
     try {
-      await fetch(`http://localhost:5001/api/sessions/${sessionId}/document`, {
+      await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/document`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -606,7 +608,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
   const fetchLiveSessions = async () => {
     try {
       console.log("Fetching live sessions from server...");
-      const response = await fetch("http://localhost:5001/api/sessions");
+      const response = await fetch(`${API_BASE_URL}/api/sessions`);
       if (!response.ok) {
         throw new Error("Failed to fetch live sessions");
       }
@@ -663,7 +665,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
   const cancelScheduledSession = async (sessionId: string) => {
     try {
       const token = await storage.getToken();
-      await fetch(`http://localhost:5001/api/sessions/${sessionId}`, {
+      await fetch(`${API_BASE_URL}/api/sessions/${sessionId}`, {
         method: 'DELETE',
         headers: {
           "Authorization": `Bearer ${token}`,

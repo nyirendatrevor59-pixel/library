@@ -1,5 +1,4 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -11,7 +10,7 @@ export const users = sqliteTable("users", {
   role: text("role").notNull().default("student"), // student, lecturer, tutor, admin
   name: text("name").notNull(),
   selectedCourses: text("selectedCourses").default("[]"), // JSON string
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 export const courses = sqliteTable("courses", {
@@ -22,7 +21,7 @@ export const courses = sqliteTable("courses", {
   description: text("description"),
   lecturerId: text("lecturerId").references(() => users.id),
   lecturerName: text("lecturerName"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 export const liveSessions = sqliteTable("live_sessions", {
@@ -41,7 +40,7 @@ export const liveSessions = sqliteTable("live_sessions", {
   currentPage: integer("currentPage").default(1),
   annotations: text("annotations"), // JSON string
   currentTool: text("currentTool").default("draw"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 export const chatMessages = sqliteTable("chat_messages", {
@@ -49,7 +48,7 @@ export const chatMessages = sqliteTable("chat_messages", {
   sessionId: text("sessionId").references(() => liveSessions.id),
   userId: text("userId").references(() => users.id),
   message: text("message").notNull(),
-  timestamp: integer("timestamp").default(sql`(unixepoch())`),
+  timestamp: integer("timestamp"),
 });
 
 export const sharedDocuments = sqliteTable("shared_documents", {
@@ -60,7 +59,7 @@ export const sharedDocuments = sqliteTable("shared_documents", {
   fileUrl: text("fileUrl").notNull(),
   fileType: text("fileType").notNull(), // pdf, doc, docx
   annotations: text("annotations"), // JSON string
-  sharedAt: integer("sharedAt").default(sql`(unixepoch())`),
+  sharedAt: integer("sharedAt"),
 });
 
 export const lecturerMaterials = sqliteTable("lecturer_materials", {
@@ -73,7 +72,7 @@ export const lecturerMaterials = sqliteTable("lecturer_materials", {
   fileType: text("fileType"), // pdf, doc, docx, link
   content: text("content"), // For text content or link
   size: integer("size"), // File size in bytes
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
   isDeleted: integer("isDeleted").default(0),
 });
 
@@ -87,8 +86,8 @@ export const tutorRequests = sqliteTable("tutor_requests", {
   messages: text("messages"), // JSON string for conversation history
   response: text("response"), // Tutor's response to the request
   status: text("status").default("pending"), // pending, answered, resolved
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  updatedAt: integer("updatedAt"),
 });
 
 export const deletedMaterials = sqliteTable("deleted_materials", {
@@ -102,8 +101,8 @@ export const deletedMaterials = sqliteTable("deleted_materials", {
   fileType: text("fileType"), // pdf, doc, docx, link
   content: text("content"), // For text content or link
   size: integer("size"), // File size in bytes
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  deletedAt: integer("deletedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  deletedAt: integer("deletedAt"),
 });
 
 export const supportRequests = sqliteTable("support_requests", {
@@ -114,8 +113,8 @@ export const supportRequests = sqliteTable("support_requests", {
   description: text("description"),
   status: text("status").default("open"), // open, in_progress, resolved, closed
   assignedTo: text("assignedTo").references(() => users.id), // admin/tutor handling it
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  updatedAt: integer("updatedAt"),
 });
 
 export const userAnalytics = sqliteTable("user_analytics", {
@@ -123,7 +122,7 @@ export const userAnalytics = sqliteTable("user_analytics", {
   userId: text("userId").references(() => users.id),
   metric: text("metric").notNull(), // sessions_attended, documents_viewed, messages_sent, etc.
   value: integer("value").notNull(),
-  date: integer("date").default(sql`(unixepoch())`), // unix timestamp
+  date: integer("date"), // unix timestamp
 });
 
 export const userTutors = sqliteTable("user_tutors", {
@@ -132,7 +131,7 @@ export const userTutors = sqliteTable("user_tutors", {
   tutorId: text("tutorId").references(() => users.id),
   courseId: text("courseId").references(() => courses.id),
   assignedBy: text("assignedBy").references(() => users.id), // who assigned
-  assignedAt: integer("assignedAt").default(sql`(unixepoch())`),
+  assignedAt: integer("assignedAt"),
   status: text("status").default("active"), // active, inactive
 });
 
@@ -145,7 +144,7 @@ export const subscriptionPlans = sqliteTable("subscription_plans", {
   duration: integer("duration").notNull(), // Duration in days
   features: text("features"), // JSON string
   isActive: integer("isActive").default(1),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 export const userSubscriptions = sqliteTable("user_subscriptions", {
@@ -156,8 +155,8 @@ export const userSubscriptions = sqliteTable("user_subscriptions", {
   startDate: integer("startDate").notNull(),
   endDate: integer("endDate").notNull(),
   autoRenew: integer("autoRenew").default(1), // boolean
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  updatedAt: integer("updatedAt"),
 });
 
 export const payments = sqliteTable("payments", {
@@ -180,8 +179,8 @@ export const payments = sqliteTable("payments", {
   otpVerified: integer("otpVerified").default(0), // Boolean flag for OTP verification status
   otpId: text("otpId"), // OTP verification ID from provider
   otpExpiresAt: integer("otpExpiresAt"), // OTP expiration timestamp
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  updatedAt: integer("updatedAt"),
 });
 
 export const paymentMethods = sqliteTable("payment_methods", {
@@ -193,7 +192,7 @@ export const paymentMethods = sqliteTable("payment_methods", {
   expiryMonth: integer("expiryMonth"),
   expiryYear: integer("expiryYear"),
   isDefault: integer("isDefault").default(0), // boolean
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 export const notifications = sqliteTable("notifications", {
@@ -204,7 +203,7 @@ export const notifications = sqliteTable("notifications", {
   message: text("message").notNull(),
   data: text("data"), // JSON string for additional data
   isRead: integer("isRead").default(0),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 // Mobile payment OTP verification
@@ -219,7 +218,7 @@ export const otpVerifications = sqliteTable("otp_verifications", {
   maxAttempts: integer("maxAttempts").default(3),
   expiresAt: integer("expiresAt").notNull(),
   verifiedAt: integer("verifiedAt"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
 });
 
 // Mobile payment provider configurations
@@ -236,8 +235,8 @@ export const mobilePaymentProviders = sqliteTable("mobile_payment_providers", {
   apiKey: text("apiKey"), // Encrypted API key
   apiSecret: text("apiSecret"), // Encrypted API secret
   webhookUrl: text("webhookUrl"),
-  createdAt: integer("createdAt").default(sql`(unixepoch())`),
-  updatedAt: integer("updatedAt").default(sql`(unixepoch())`),
+  createdAt: integer("createdAt"),
+  updatedAt: integer("updatedAt"),
 });
 
 // Insert schemas

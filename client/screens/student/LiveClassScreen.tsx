@@ -56,18 +56,17 @@ export default function LiveClassScreen() {
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/materials`);
+        const response = await fetch(`${API_BASE_URL}/api/materials?courseIds=${session.courseId}`);
         if (response.ok) {
           const data = await response.json();
-          // Filter materials by courseId
-          const courseMaterials = data.filter((m: any) => m.courseId === session.courseId);
-          setMaterials(courseMaterials);
+          setMaterials(data);
         }
       } catch (error) {
         console.error('Failed to fetch materials:', error);
       }
     };
-    if (user?.role === 'lecturer') {
+    // Allow both lecturers and students to see materials
+    if (user?.role === 'lecturer' || user?.role === 'student') {
       fetchMaterials();
     }
   }, [session.courseId, user?.role]);
@@ -273,7 +272,7 @@ export default function LiveClassScreen() {
             >
               <Feather name={!isVideoEnabled ? "video-off" : "video"} size={20} color="#FFF" />
             </Pressable>
-            {user?.role === 'lecturer' && (
+            {(user?.role === 'lecturer' || user?.role === 'student') && (
               <>
                 <Pressable
                   style={[
@@ -284,7 +283,7 @@ export default function LiveClassScreen() {
                 >
                   <Feather name="file-text" size={20} color="#FFF" />
                 </Pressable>
-                {session.currentDocument && (
+                {session.currentDocument && user?.role === 'lecturer' && (
                   <Pressable
                     style={[
                       styles.controlButton,
@@ -386,7 +385,9 @@ export default function LiveClassScreen() {
             <Pressable onPress={() => setShowMaterialsPicker(false)}>
               <Feather name="x" size={24} color={theme.text} />
             </Pressable>
-            <ThemedText type="h3">Select Document to Share</ThemedText>
+            <ThemedText type="h3">
+              {user?.role === 'lecturer' ? 'Select Document to Share' : 'Course Materials'}
+            </ThemedText>
           </View>
           <FlatList
             data={materials}
@@ -396,14 +397,19 @@ export default function LiveClassScreen() {
               <Pressable
                 style={[styles.materialItem, { backgroundColor: theme.backgroundSecondary }]}
                 onPress={() => {
-                  const documentUrl = `${API_BASE_URL}${item.fileUrl}`;
-                  shareDocument(session.id, {
-                    id: String(item.id),
-                    title: item.title,
-                    url: documentUrl,
-                  });
-                  setShowMaterialsPicker(false);
-                  Alert.alert("Document Shared", `${item.title} has been shared with the class.`);
+                  if (user?.role === 'lecturer') {
+                    const documentUrl = `${API_BASE_URL}${item.fileUrl}`;
+                    shareDocument(session.id, {
+                      id: String(item.id),
+                      title: item.title,
+                      url: documentUrl,
+                    });
+                    setShowMaterialsPicker(false);
+                    Alert.alert("Document Shared", `${item.title} has been shared with the class.`);
+                  } else {
+                    setShowMaterialsPicker(false);
+                    Alert.alert("Access Denied", "Only lecturers can share documents.");
+                  }
                 }}
               >
                 <View style={[styles.fileIcon, { backgroundColor: AppColors.primary + "20" }]}>

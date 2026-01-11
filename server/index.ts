@@ -6,7 +6,7 @@ import { Server as SocketServer } from "socket.io";
 import * as fs from "fs";
 import * as path from "path";
 import { db } from "./storage";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { liveSessions } from "../shared/schema";
 
 const app = express();
@@ -185,38 +185,200 @@ function setupSocketIO(httpServer: any) {
 
 async function runMigrations() {
   try {
-    log("Running database migrations...");
-    // Add new columns to live_sessions table
-    try {
-      await db.$client.exec(`ALTER TABLE live_sessions ADD COLUMN "lecturerName" text`);
-    } catch (e) { }
-    try {
-      await db.$client.exec(`ALTER TABLE live_sessions ADD COLUMN "currentDocument" text`);
-    } catch (e) { }
-    try {
-      await db.$client.exec(`ALTER TABLE live_sessions ADD COLUMN "currentPage" integer DEFAULT 1`);
-    } catch (e) { }
-    try {
-      await db.$client.exec(`ALTER TABLE live_sessions ADD COLUMN "annotations" text`);
-    } catch (e) { }
-    try {
-      await db.$client.exec(`ALTER TABLE live_sessions ADD COLUMN "currentTool" text DEFAULT 'draw'`);
-    } catch (e) { }
-    // Add isDeleted and size to lecturer_materials
-    try {
-      await db.$client.exec(`ALTER TABLE lecturer_materials ADD COLUMN "isDeleted" integer DEFAULT 0`);
-    } catch (e) { }
-    try {
-      await db.$client.exec(`ALTER TABLE lecturer_materials ADD COLUMN "size" integer`);
-    } catch (e) { }
-    // Add index for performance
-    await db.$client.exec(`
-      CREATE INDEX IF NOT EXISTS idx_lecturer_materials_lecturer_id_is_deleted
-      ON lecturer_materials ("lecturerId", "isDeleted")
-    `);
-    // Create deleted_materials table
-    await db.$client.exec(`
-      CREATE TABLE IF NOT EXISTS deleted_materials (
+    log("Running database migrations and initialization...");
+
+    // Import the database client directly to run raw SQL
+    const Database = require('better-sqlite3');
+    const dbClient = new Database("./database.db");
+
+    // Create all tables first using raw SQL
+    const tables = [
+      `CREATE TABLE IF NOT EXISTS users (
+        id text PRIMARY KEY,
+        username text,
+        email text UNIQUE,
+        password text,
+        name text,
+        role text DEFAULT 'student',
+        "selectedCourses" text DEFAULT '[]',
+        "createdAt" integer DEFAULT (strftime('%s', 'now')),
+        "updatedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS courses (
+        id text PRIMARY KEY,
+        name text NOT NULL,
+        code text NOT NULL,
+        category text,
+        description text,
+        "lecturerId" text,
+        "lecturerName" text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS live_sessions (
+        id text PRIMARY KEY,
+        "courseId" text,
+        "lecturerId" text,
+        topic text,
+        "scheduledTime" integer,
+        "startTime" integer,
+        "endTime" integer,
+        "isLive" integer DEFAULT 0,
+        "lecturerName" text,
+        participants integer DEFAULT 0,
+        "currentDocument" text,
+        "currentPage" integer DEFAULT 1,
+        annotations text,
+        "currentTool" text DEFAULT 'draw',
+        "currentPath" text,
+        "scrollPosition" integer DEFAULT 0,
+        messages text,
+        attendees text,
+        "micStates" text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS lecturer_materials (
+        id text PRIMARY KEY,
+        "lecturerId" text,
+        "courseId" text,
+        title text NOT NULL,
+        description text,
+        "fileUrl" text,
+        "fileType" text,
+        content text,
+        size integer,
+        "isDeleted" integer DEFAULT 0,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS chat_messages (
+        id text PRIMARY KEY,
+        "sessionId" text,
+        "userId" text,
+        message text,
+        timestamp integer,
+        status text DEFAULT 'sent'
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS shared_documents (
+        id text PRIMARY KEY,
+        "sessionId" text,
+        "userId" text,
+        title text,
+        "fileUrl" text,
+        "fileType" text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS tutor_requests (
+        id text PRIMARY KEY,
+        "studentId" text,
+        "courseId" text,
+        type text,
+        title text,
+        description text,
+        response text,
+        status text DEFAULT 'pending',
+        messages text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now')),
+        "updatedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS user_tutors (
+        id text PRIMARY KEY,
+        "studentId" text,
+        "tutorId" text,
+        "courseId" text,
+        status text DEFAULT 'active',
+        "assignedBy" text,
+        "assignedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS support_requests (
+        id text PRIMARY KEY,
+        "userId" text,
+        type text,
+        title text,
+        description text,
+        status text DEFAULT 'open',
+        "assignedTo" text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now')),
+        "updatedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS notifications (
+        id text PRIMARY KEY,
+        "userId" text,
+        type text,
+        title text,
+        message text,
+        "isRead" integer DEFAULT 0,
+        data text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS user_analytics (
+        id text PRIMARY KEY,
+        "userId" text,
+        metric text,
+        value real,
+        date integer,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS subscription_plans (
+        id text PRIMARY KEY,
+        name text NOT NULL,
+        description text,
+        price integer,
+        currency text DEFAULT 'USD',
+        duration integer,
+        features text,
+        "isActive" integer DEFAULT 1,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS user_subscriptions (
+        id text PRIMARY KEY,
+        "userId" text,
+        "planId" text,
+        status text DEFAULT 'active',
+        "startDate" integer,
+        "endDate" integer,
+        "autoRenew" integer DEFAULT 1,
+        "createdAt" integer DEFAULT (strftime('%s', 'now')),
+        "updatedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS payments (
+        id text PRIMARY KEY,
+        "userId" text,
+        "subscriptionId" text,
+        amount real,
+        currency text,
+        status text DEFAULT 'pending',
+        "paymentMethod" text,
+        "transactionId" text,
+        description text,
+        "createdAt" integer DEFAULT (strftime('%s', 'now')),
+        "updatedAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS payment_methods (
+        id text PRIMARY KEY,
+        "userId" text,
+        type text,
+        provider text,
+        "last4" text,
+        "expiryMonth" integer,
+        "expiryYear" integer,
+        "isDefault" integer DEFAULT 0,
+        "createdAt" integer DEFAULT (strftime('%s', 'now'))
+      )`,
+
+      `CREATE TABLE IF NOT EXISTS deleted_materials (
         id text PRIMARY KEY,
         "originalId" text NOT NULL,
         "lecturerId" text,
@@ -229,11 +391,24 @@ async function runMigrations() {
         size integer,
         "createdAt" integer DEFAULT (strftime('%s', 'now')),
         "deletedAt" integer DEFAULT (strftime('%s', 'now'))
-      )
+      )`
+    ];
+
+    // Execute each table creation
+    for (const tableSQL of tables) {
+      dbClient.exec(tableSQL);
+    }
+
+    // Create indexes
+    dbClient.exec(`
+      CREATE INDEX IF NOT EXISTS idx_lecturer_materials_lecturer_id_is_deleted
+      ON lecturer_materials ("lecturerId", "isDeleted")
     `);
-    log("Migrations completed successfully");
+
+    dbClient.close();
+    log("Database initialization completed successfully");
   } catch (error) {
-    log("Migration error:", error);
+    log("Database initialization error:", error);
   }
 }
 
@@ -247,10 +422,10 @@ function setupErrorHandler(app: express.Application) {
 
     const status = error.status || error.statusCode || 500;
     const message = error.message || "Internal Server Error";
+res.status(status).json({ message });
 
-    res.status(status).json({ message });
+console.error(err);
 
-    throw err;
   });
 }
 

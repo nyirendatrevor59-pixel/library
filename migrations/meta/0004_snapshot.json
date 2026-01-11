@@ -1,0 +1,1772 @@
+{
+  "id": "d734803a-6bda-48f4-bb9b-5e621d868a38",
+  "prevId": "2f734907-b8ce-4c40-92e0-6a6262d4c11a",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.chat_messages": {
+      "name": "chat_messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chat_messages_sessionId_live_sessions_id_fk": {
+          "name": "chat_messages_sessionId_live_sessions_id_fk",
+          "tableFrom": "chat_messages",
+          "tableTo": "live_sessions",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "chat_messages_userId_users_id_fk": {
+          "name": "chat_messages_userId_users_id_fk",
+          "tableFrom": "chat_messages",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses": {
+      "name": "courses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lecturerId": {
+          "name": "lecturerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lecturerName": {
+          "name": "lecturerName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "courses_lecturerId_users_id_fk": {
+          "name": "courses_lecturerId_users_id_fk",
+          "tableFrom": "courses",
+          "tableTo": "users",
+          "columnsFrom": [
+            "lecturerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "courses_code_unique": {
+          "name": "courses_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.deleted_materials": {
+      "name": "deleted_materials",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "originalId": {
+          "name": "originalId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lecturerId": {
+          "name": "lecturerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fileUrl": {
+          "name": "fileUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fileType": {
+          "name": "fileType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "size": {
+          "name": "size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "deleted_materials_lecturerId_users_id_fk": {
+          "name": "deleted_materials_lecturerId_users_id_fk",
+          "tableFrom": "deleted_materials",
+          "tableTo": "users",
+          "columnsFrom": [
+            "lecturerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "deleted_materials_courseId_courses_id_fk": {
+          "name": "deleted_materials_courseId_courses_id_fk",
+          "tableFrom": "deleted_materials",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.lecturer_materials": {
+      "name": "lecturer_materials",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lecturerId": {
+          "name": "lecturerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fileUrl": {
+          "name": "fileUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fileType": {
+          "name": "fileType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "size": {
+          "name": "size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "isDeleted": {
+          "name": "isDeleted",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "lecturer_materials_lecturerId_users_id_fk": {
+          "name": "lecturer_materials_lecturerId_users_id_fk",
+          "tableFrom": "lecturer_materials",
+          "tableTo": "users",
+          "columnsFrom": [
+            "lecturerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "lecturer_materials_courseId_courses_id_fk": {
+          "name": "lecturer_materials_courseId_courses_id_fk",
+          "tableFrom": "lecturer_materials",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.live_sessions": {
+      "name": "live_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lecturerId": {
+          "name": "lecturerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lecturerName": {
+          "name": "lecturerName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "topic": {
+          "name": "topic",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduledTime": {
+          "name": "scheduledTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startTime": {
+          "name": "startTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endTime": {
+          "name": "endTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isLive": {
+          "name": "isLive",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "participants": {
+          "name": "participants",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "settings": {
+          "name": "settings",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentDocument": {
+          "name": "currentDocument",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentPage": {
+          "name": "currentPage",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "annotations": {
+          "name": "annotations",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentTool": {
+          "name": "currentTool",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draw'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "live_sessions_courseId_courses_id_fk": {
+          "name": "live_sessions_courseId_courses_id_fk",
+          "tableFrom": "live_sessions",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "live_sessions_lecturerId_users_id_fk": {
+          "name": "live_sessions_lecturerId_users_id_fk",
+          "tableFrom": "live_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "lecturerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.mobile_payment_providers": {
+      "name": "mobile_payment_providers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "displayName": {
+          "name": "displayName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country": {
+          "name": "country",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "minAmount": {
+          "name": "minAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maxAmount": {
+          "name": "maxAmount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isActive": {
+          "name": "isActive",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "apiEndpoint": {
+          "name": "apiEndpoint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apiKey": {
+          "name": "apiKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apiSecret": {
+          "name": "apiSecret",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "webhookUrl": {
+          "name": "webhookUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notifications": {
+      "name": "notifications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isRead": {
+          "name": "isRead",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notifications_userId_users_id_fk": {
+          "name": "notifications_userId_users_id_fk",
+          "tableFrom": "notifications",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.otp_verifications": {
+      "name": "otp_verifications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "paymentId": {
+          "name": "paymentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "otpCode": {
+          "name": "otpCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "maxAttempts": {
+          "name": "maxAttempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 3
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verifiedAt": {
+          "name": "verifiedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "otp_verifications_paymentId_payments_id_fk": {
+          "name": "otp_verifications_paymentId_payments_id_fk",
+          "tableFrom": "otp_verifications",
+          "tableTo": "payments",
+          "columnsFrom": [
+            "paymentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.payment_methods": {
+      "name": "payment_methods",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last4": {
+          "name": "last4",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiryMonth": {
+          "name": "expiryMonth",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiryYear": {
+          "name": "expiryYear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isDefault": {
+          "name": "isDefault",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payment_methods_userId_users_id_fk": {
+          "name": "payment_methods_userId_users_id_fk",
+          "tableFrom": "payment_methods",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subscriptionId": {
+          "name": "subscriptionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USD'"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "paymentMethod": {
+          "name": "paymentMethod",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transactionId": {
+          "name": "transactionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retryCount": {
+          "name": "retryCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "nextRetryAt": {
+          "name": "nextRetryAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "maxRetries": {
+          "name": "maxRetries",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 5
+        },
+        "mobileProvider": {
+          "name": "mobileProvider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mobileNumber": {
+          "name": "mobileNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "otpRequired": {
+          "name": "otpRequired",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "otpVerified": {
+          "name": "otpVerified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "otpId": {
+          "name": "otpId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "otpExpiresAt": {
+          "name": "otpExpiresAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payments_userId_users_id_fk": {
+          "name": "payments_userId_users_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "payments_subscriptionId_user_subscriptions_id_fk": {
+          "name": "payments_subscriptionId_user_subscriptions_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "user_subscriptions",
+          "columnsFrom": [
+            "subscriptionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.shared_documents": {
+      "name": "shared_documents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fileUrl": {
+          "name": "fileUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fileType": {
+          "name": "fileType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annotations": {
+          "name": "annotations",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sharedAt": {
+          "name": "sharedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "shared_documents_sessionId_live_sessions_id_fk": {
+          "name": "shared_documents_sessionId_live_sessions_id_fk",
+          "tableFrom": "shared_documents",
+          "tableTo": "live_sessions",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "shared_documents_userId_users_id_fk": {
+          "name": "shared_documents_userId_users_id_fk",
+          "tableFrom": "shared_documents",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subscription_plans": {
+      "name": "subscription_plans",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USD'"
+        },
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "features": {
+          "name": "features",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isActive": {
+          "name": "isActive",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.support_requests": {
+      "name": "support_requests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'open'"
+        },
+        "assignedTo": {
+          "name": "assignedTo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "support_requests_userId_users_id_fk": {
+          "name": "support_requests_userId_users_id_fk",
+          "tableFrom": "support_requests",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "support_requests_assignedTo_users_id_fk": {
+          "name": "support_requests_assignedTo_users_id_fk",
+          "tableFrom": "support_requests",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedTo"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tutor_requests": {
+      "name": "tutor_requests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "studentId": {
+          "name": "studentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "messages": {
+          "name": "messages",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "response": {
+          "name": "response",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tutor_requests_studentId_users_id_fk": {
+          "name": "tutor_requests_studentId_users_id_fk",
+          "tableFrom": "tutor_requests",
+          "tableTo": "users",
+          "columnsFrom": [
+            "studentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tutor_requests_courseId_courses_id_fk": {
+          "name": "tutor_requests_courseId_courses_id_fk",
+          "tableFrom": "tutor_requests",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_analytics": {
+      "name": "user_analytics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metric": {
+          "name": "metric",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_analytics_userId_users_id_fk": {
+          "name": "user_analytics_userId_users_id_fk",
+          "tableFrom": "user_analytics",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_subscriptions": {
+      "name": "user_subscriptions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "planId": {
+          "name": "planId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endDate": {
+          "name": "endDate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "autoRenew": {
+          "name": "autoRenew",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_subscriptions_userId_users_id_fk": {
+          "name": "user_subscriptions_userId_users_id_fk",
+          "tableFrom": "user_subscriptions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_subscriptions_planId_subscription_plans_id_fk": {
+          "name": "user_subscriptions_planId_subscription_plans_id_fk",
+          "tableFrom": "user_subscriptions",
+          "tableTo": "subscription_plans",
+          "columnsFrom": [
+            "planId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_tutors": {
+      "name": "user_tutors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "studentId": {
+          "name": "studentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tutorId": {
+          "name": "tutorId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courseId": {
+          "name": "courseId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedBy": {
+          "name": "assignedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assignedAt": {
+          "name": "assignedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'active'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_tutors_studentId_users_id_fk": {
+          "name": "user_tutors_studentId_users_id_fk",
+          "tableFrom": "user_tutors",
+          "tableTo": "users",
+          "columnsFrom": [
+            "studentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_tutors_tutorId_users_id_fk": {
+          "name": "user_tutors_tutorId_users_id_fk",
+          "tableFrom": "user_tutors",
+          "tableTo": "users",
+          "columnsFrom": [
+            "tutorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_tutors_courseId_courses_id_fk": {
+          "name": "user_tutors_courseId_courses_id_fk",
+          "tableFrom": "user_tutors",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "user_tutors_assignedBy_users_id_fk": {
+          "name": "user_tutors_assignedBy_users_id_fk",
+          "tableFrom": "user_tutors",
+          "tableTo": "users",
+          "columnsFrom": [
+            "assignedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'student'"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selectedCourses": {
+          "name": "selectedCourses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "extract(epoch from now())::int"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

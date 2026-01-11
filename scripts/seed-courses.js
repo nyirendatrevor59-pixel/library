@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { db } from '../server/storage.js';
 import { users, courses } from '../shared/schema.js';
 import { eq } from 'drizzle-orm';

@@ -3,6 +3,7 @@ import { View, StyleSheet, Pressable, Platform, ScrollView } from 'react-native'
 import { PanGestureHandler, PinchGestureHandler, State, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, PinchGestureHandlerGestureEvent, PinchGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 import { WebView } from 'react-native-webview';
 const PdfComponent = Platform.OS === 'web' ? null : lazy(() => import('react-native-pdf'));
+console.log("PdfComponent defined:", !!PdfComponent);
 import Svg, { Path, Circle, Text } from 'react-native-svg';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -411,7 +412,7 @@ export default function DocumentViewer({ document, currentPage = 1, annotations:
                       }
                     ]}
                   >
-                    {PdfComponent && <Suspense fallback={<View />}><PdfComponent
+                    {PdfComponent && (() => { console.log("Rendering PdfComponent"); return <Suspense fallback={<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.backgroundSecondary }}><ThemedText>Loading PDF...</ThemedText></View>}><PdfComponent
                       source={{ uri: document.url }}
                       page={currentPage}
                       style={styles.fixedWebView}

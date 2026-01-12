@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, lazy, Suspense } from 'react';
 import { View, StyleSheet, Pressable, Platform, ScrollView } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler, State, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, PinchGestureHandlerGestureEvent, PinchGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 import { WebView } from 'react-native-webview';
-import Pdf from 'react-native-pdf';
+const PdfComponent = Platform.OS === 'web' ? null : lazy(() => import('react-native-pdf'));
 import Svg, { Path, Circle, Text } from 'react-native-svg';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -411,20 +411,20 @@ export default function DocumentViewer({ document, currentPage = 1, annotations:
                       }
                     ]}
                   >
-                    <Pdf
+                    {PdfComponent && <Suspense fallback={<View />}><PdfComponent
                       source={{ uri: document.url }}
                       page={currentPage}
                       style={styles.fixedWebView}
-                      onLoadComplete={(numberOfPages: number) => {
+                      onLoadComplete={(numberOfPages: number, path: string, size: {height: number, width: number}) => {
                         console.log(`PDF loaded with ${numberOfPages} pages`);
                       }}
-                      onPageChanged={(page: number) => {
+                      onPageChanged={(page: number, numberOfPages: number) => {
                         onPageChange?.(page);
                       }}
                       onError={(error: any) => {
                         console.error('PDF error:', error);
                       }}
-                    />
+                    /></Suspense>}
                   </View>
                 </View>
               </PanGestureHandler>

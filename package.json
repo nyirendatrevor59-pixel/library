@@ -13,6 +13,7 @@
     "build:web": "npx expo export --platform web --output-dir dist",
     "server:prod": "NODE_ENV=production node dist/server_dist/index.js",
     "db:push": "drizzle-kit push",
+    "db:add-columns": "node scripts/add-missing-columns.js",
     "lint": "npx expo lint",
     "lint:fix": "npx expo lint --fix",
     "check:types": "tsc --noEmit",

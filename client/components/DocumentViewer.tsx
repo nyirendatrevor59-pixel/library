@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Pressable, Platform, ScrollView } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler, State, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, PinchGestureHandlerGestureEvent, PinchGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 import { WebView } from 'react-native-webview';
+import Pdf from 'react-native-pdf';
 import Svg, { Path, Circle, Text } from 'react-native-svg';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -410,16 +411,19 @@ export default function DocumentViewer({ document, currentPage = 1, annotations:
                       }
                     ]}
                   >
-                    <WebView
-                      ref={webViewRef}
-                      source={{ uri: `${document.url}#page=${currentPage}` }}
+                    <Pdf
+                      source={{ uri: document.url }}
+                      page={currentPage}
                       style={styles.fixedWebView}
-                      javaScriptEnabled={true}
-                      domStorageEnabled={true}
-                      startInLoadingState={true}
-                      scalesPageToFit={false}
-                      scrollEnabled={scrollMode}
-                      zoomable={false}
+                      onLoadComplete={(numberOfPages: number) => {
+                        console.log(`PDF loaded with ${numberOfPages} pages`);
+                      }}
+                      onPageChanged={(page: number) => {
+                        onPageChange?.(page);
+                      }}
+                      onError={(error: any) => {
+                        console.error('PDF error:', error);
+                      }}
                     />
                   </View>
                 </View>

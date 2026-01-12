@@ -416,16 +416,16 @@ export default function DocumentViewer({ document, currentPage = 1, annotations:
                       source={{ uri: document.url }}
                       page={currentPage}
                       style={styles.fixedWebView}
-                      onLoadComplete={(numberOfPages: number, path: string, size: {height: number, width: number}) => {
+                      onLoadComplete={(numberOfPages: number, _path: string, _size: {height: number, width: number}) => {
                         console.log(`PDF loaded with ${numberOfPages} pages`);
                       }}
-                      onPageChanged={(page: number, numberOfPages: number) => {
+                      onPageChanged={(page: number, _numberOfPages: number) => {
                         onPageChange?.(page);
                       }}
                       onError={(error: any) => {
                         console.error('PDF error:', error);
                       }}
-                    /></Suspense>}
+                    /></Suspense>})()}
                   </View>
                 </View>
               </PanGestureHandler>
